@@ -1,0 +1,291 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro&family=Ubuntu");
+
+html,
+h1,
+h2,
+h3,
+h4,
+p,
+a,
+button {
+  font-family: "Source Sans Pro", "Ubuntu", sans-serif !important;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: #161e2d;
+  color: white;
+}
+.game-body {
+  border-radius: 10px;
+  border: 1px solid #ececec;
+  padding: 5px;
+  min-height: calc(100vh - 50px);
+  background-color: #192740;
+  overflow: auto;
+}
+.danger {
+  color: #eb0037;
+}
+.option {
+  background-color: #454e60;
+}
+.case {
+  line-height: 1.25;
+}
+.bi {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+.back {
+  background: #3bc81e;
+}
+.back:hover {
+  background: #32971d;
+  outline: 1px solid #d4d8df;
+}
+.playground {
+  width: 700px;
+}
+.playground .playground-bg {
+  border-radius: 4px;
+  border: 1px solid #ffffff;
+}
+.playground .overlay {
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+.playground .overlay.show {
+  z-index: 1;
+}
+/** OLD **/
+
+.logo {
+  max-height: 80px;
+}
+.question-count-block {
+  color: #c4c6ca;
+}
+.cursor-pointer {
+  cursor: pointer !important;
+}
+button:focus {
+  border: 1px solid transparent !important;
+}
+.option:hover {
+  background-color: #454e6087;
+}
+.flag-container {
+  background-color: #161e2d;
+  border: 1px solid white;
+  color: white;
+  border-radius: 0.5rem;
+}
+.flag-header {
+  color: white;
+  border-bottom: 1px solid white;
+  padding: 0.5rem 1rem;
+}
+.flag-content {
+  padding: 1rem 1rem;
+}
+
+/** Grid Tile **/
+.grid-tile {
+  box-sizing: border-box;
+  border: 0.5px dotted #ffffff;
+  width: 101px;
+  height: 125px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  position: relative;
+  font-size: 60px;
+}
+
+/** Grid Pieces **/
+.pieces {
+  min-height: 125px;
+}
+.piece {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 125px;
+  height: 125px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  z-index: 1;
+}
+.grid-tile .piece {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/** Grid Green **/
+.grid.green {
+  width: 460px;
+}
+.grid.green .grid-tile:nth-child(1) {
+  border-top-left-radius: 4px;
+}
+.grid.green .grid-tile:nth-child(4) {
+  border-top-right-radius: 4px;
+}
+.grid.green .grid-tile:nth-child(5) {
+  border-bottom-left-radius: 4px;
+}
+.grid.green .grid-tile:nth-child(8) {
+  border-bottom-right-radius: 4px;
+}
+.grid.green .grid-tile {
+  width: 114px;
+}
+/** Grid Green end **/
+
+/** In Green **/
+.grid.green .piece.p0.correct {
+  height: 125px;
+  width: 160px;
+}
+.grid.green .piece.p1.correct {
+  left: -6px;
+  height: 127px;
+  width: 129px;
+}
+.grid.green .piece.p2.correct {
+  left: -27px;
+  height: 147px;
+  width: 169px;
+}
+.grid.green .piece.p3.correct {
+  left: -9px;
+}
+.grid.green .piece.p4.correct {
+  height: 170px;
+  top: -31px;
+}
+.grid.green .piece.p5.correct {
+  height: 174px;
+  width: 174px;
+  left: -29px;
+  top: -32px;
+}
+.grid.green .piece.p6.correct {
+  left: -7px;
+  top: -10px;
+  height: 131px;
+  width: 128px;
+}
+.grid.green .piece.p7.correct {
+  height: 173px;
+  width: 150px;
+  left: -33px;
+  top: -32px;
+}
+
+/** Grid Yellow **/
+.grid.yellow {
+  width: 350px;
+}
+.grid.yellow .grid-tile:nth-child(1) {
+  border-top-left-radius: 4px;
+}
+.grid.yellow .grid-tile:nth-child(3) {
+  border-top-right-radius: 4px;
+}
+.grid.yellow .grid-tile:nth-child(4) {
+  border-bottom-left-radius: 4px;
+}
+.grid.yellow .grid-tile:nth-child(6) {
+  border-bottom-right-radius: 4px;
+}
+.grid.yellow .grid-tile {
+  width: 113px;
+}
+.grid.yellow .piece.p0.correct {
+  width: 142px;
+}
+.grid.yellow .piece.p1.correct {
+  left: -6px;
+  width: 129px;
+  height: 125px;
+}
+.grid.yellow .piece.p2.correct {
+  left: -27px;
+  height: 144px;
+  width: 139px;
+}
+.grid.yellow .piece.p3.correct {
+  width: 140px;
+  height: 168px;
+  top: -32px;
+}
+.grid.yellow .piece.p4.correct {
+  width: 171px;
+  height: 171px;
+  left: -29px;
+  top: -33px;
+}
+.grid.yellow .piece.p5.correct {
+  height: 132px;
+  width: 120px;
+  left: -8px;
+  top: -13px;
+}
+/** Grid Yellow End **/
+
+/** Grid Red **/
+.grid.red {
+  width: 350px;
+}
+.grid.red .grid-tile:nth-child(1) {
+  border-top-left-radius: 4px;
+}
+.grid.red .grid-tile:nth-child(3) {
+  border-top-right-radius: 4px;
+}
+.grid.red .grid-tile:nth-child(4) {
+  border-bottom-left-radius: 4px;
+}
+.grid.red .grid-tile:nth-child(5) {
+  border-bottom-right-radius: 4px;
+}
+.grid.red .grid-tile {
+  width: 115px;
+}
+.grid.red .piece.p0.correct {
+  width: 144px;
+}
+.grid.red .piece.p1.correct {
+  left: -7px;
+  height: 126px;
+  width: 128px;
+}
+.grid.red .piece.p2.correct {
+  left: -30px;
+  height: 146px;
+  width: 170px;
+}
+.grid.red .piece.p3.correct {
+  width: 122px;
+  height: 169px;
+  top: -31px;
+}
+.grid.red .piece.p4.correct {
+  width: 172px;
+  height: 172px;
+  left: -30px;
+  top: -32px;
+}
+/** Grid Red End **/
+.bandit,
+.defaced {
+  max-height: 300px;
+}

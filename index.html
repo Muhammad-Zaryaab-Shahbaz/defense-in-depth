@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>TryHackMe | Defense in Depth</title>
+    <meta
+      name="description"
+      content="TryHackMe is a free online platform for learning cyber security, using hands-on exercises and labs, all through your browser!"
+    />
+    <meta
+      name="og:description"
+      content="TryHackMe is a free online platform for learning cyber security, using hands-on exercises and labs, all through your browser!"
+    />
+    <meta
+      name="keywords"
+      content="cyber,security,cyber security,cyber security training,coding,computer,bitcoin,hacking,hackers,hacks,hack,exploits,keylogger,learn,poc"
+    />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <meta property="og:site_name" content="TryHackMe" />
+    <meta property="og:title" content="TryHackMe | Cyber Security Training" />
+    <meta
+      property="og:image"
+      content="https://tryhackme.com/img/meta/default.png"
+    />
+    <meta property="og:url" content="https://tryhackme.com" />
+    <meta
+      name="twitter:image"
+      content="https://tryhackme.com/img/meta/default.png"
+    />
+    <meta
+      property="og:description"
+      content="An online platform for learning and teaching cyber security, all through your browser."
+    />
+    <meta
+      title="author"
+      content="Muhammad Zaryaab Shahbaz (zariab64@gmail.com)"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://assets.tryhackme.com/img/favicon.png"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://kit.fontawesome.com/02dca0d8e3.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="container-fluid py-4">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="game-body d-flex flex-column justify-content-between">
+            <!-- Stats -->
+            <div id="stats" class="container-fluid pt-3 d-none">
+              <div class="row d-flex align-items-center">
+                <div class="col-md-6">
+                  <button
+                    id="homeBtn"
+                    class="btn btn-success back d-flex align-items-center d-none"
+                    onclick="goHome()"
+                  >
+                    <i class="fas fa-angle-left"></i>
+                    <span class="d-block" style="margin-bottom: 1px"
+                      >&nbsp;Home</span
+                    >
+                  </button>
+                </div>
+                <div class="col-md-6">
+                  <p class="mb-0 text-end">
+                    Progress: <span id="puzzle-progress">--</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- Stats end -->
+
+            <!-- Home -->
+            <div id="home" class="container-fluid pb-3">
+              <div class="row">
+                <div class="col-md-12 text-center">
+                  <h2>Mission ELF-Possible</h2>
+                  <p class="text-center my-1">
+                    You are going to be presented with three different cases
+                    each harder than the previous one. Your objective is to
+                    <u>get inside the perimeter</u>,
+                    <u>locate the area where the vault is</u> and
+                    <u>get access to it</u> without being caught.
+                  </p>
+                  <hr class="my-2" />
+                </div>
+                <div class="col-sm-6 col-xs-12 mx-auto py-5">
+                  <button
+                    class="option btn btn-lg text-white my-1 w-100"
+                    id="start-puzzle"
+                    onclick="start()"
+                  >
+                    Start
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Home End -->
+
+            <!-- Screen -->
+            <div id="screen" class="container-fluid pb-3"></div>
+            <!-- Screen End -->
+
+            <!-- Cases -->
+            <div id="cases-body" class="container-fluid my-2"></div>
+            <!-- Cases End -->
+          </div>
+
+          <div class="browser-body" id="browser-body">
+            <div id="content" class="container">
+              <div class="row">
+                <div class="col-md-12 text-center">
+                  <!-- SECTION ONE -->
+                  <section id="puzzle-section" class="d-none">
+                    <div class="row">
+                      <div
+                        class="col-md-12 d-flex align-items-center justify-content-between mb-2"
+                      >
+                        <p class="mb-0">
+                          Progress: <span id="puzzle-progress">--</span>
+                        </p>
+                        <p class="mb-0 ps-4 pe-2 question-count-block">
+                          Puzzles: <span id="question-number">1</span>/3
+                        </p>
+                      </div>
+                      <div class="col-md-12 mb-2">
+                        <div
+                          id="grid"
+                          class="grid d-flex flex-wrap mx-auto"
+                        ></div>
+                      </div>
+                      <div class="col-md-12">
+                        <div
+                          id="pieces"
+                          class="pieces d-flex flex-wrap align-items-center justify-content-center"
+                        ></div>
+                      </div>
+                      <div class="col-md-12 text-start">
+                        <div
+                          id="clue-container"
+                          class="d-flex flex-wrap flex-column mt-3"
+                        >
+                          <h4 class="mb-1">Clues:</h4>
+                          <ol id="clue-list" class="ps-3"></ol>
+                        </div>
+                      </div>
+                      <div class="col-md-6 mx-auto">
+                        <button
+                          class="option btn btn-lg text-white my-2 w-100 d-none"
+                          id="btn-next-puzzle"
+                          onclick="nextPuzzle()"
+                        >
+                          Next
+                        </button>
+                      </div>
+                    </div>
+                  </section>
+                  <!-- SECTION ONE END -->
+                </div>
+              </div>
+            </div>
+
+            <div id="reward" class="container d-none">
+              <div class="row">
+                <div class="col-md-6 mx-auto">
+                  <div class="flag-container d-flex flex-column w-100 my-2">
+                    <div
+                      class="flag-header d-flex align-items-center justify-content-center"
+                    >
+                      <h5 class="mb-0">Flag</h5>
+                    </div>
+                    <div class="flag-content text-center">
+                      <p class="mb-0" id="flag">
+                        VEhNe0lUJ1MgQSBZM1QxIENIUjEkVE1BJH0=
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 text-center mt-3">
+                  <p class="mb-0">The culprit behind the misery was</p>
+                  <h1 class="text-center my-0 danger">
+                    The Bandit Yeti!
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"></script>
+    <script src="utility.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

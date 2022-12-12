@@ -1,0 +1,74 @@
+<script>
+  const workshop = [105, 320, 40, 185];
+  const office = [440, 675, 30, 195];
+  const stable = [150, 280, 210, 342];
+  const EA = [420, 545, 225, 330];
+
+  const compoundImg = $("#compoundImg");
+
+  const compoundMouseover = event => {
+    const { offsetX, offsetY } = event;
+    const base = { offsetX, offsetY };
+    // console.log(base);
+
+    if (isWithin(base, workshop)) {
+      compoundImg.addClass("cursor-pointer");
+    } else if (isWithin(base, office)) {
+      compoundImg.addClass("cursor-pointer");
+    } else if (isWithin(base, stable)) {
+      compoundImg.addClass("cursor-pointer");
+    } else if (isWithin(base, EA)) {
+      compoundImg.addClass("cursor-pointer");
+    } else if (compoundImg.hasClass("cursor-pointer")) {
+      compoundImg.removeClass("cursor-pointer");
+    }
+  };
+
+  const selectArea = event => {
+    const { offsetX, offsetY } = event;
+    const base = { offsetX, offsetY };
+    // console.log(base);
+
+    if (isWithin(base, workshop)) {
+      alert("Santa's Workshop");
+    } else if (isWithin(base, office)) {
+      alert("Santa's Office");
+    } else if (isWithin(base, stable)) {
+      alert("Deer Stable");
+    } else if (isWithin(base, EA)) {
+      alert("Executive Management Office");
+    }
+
+    // $(anchor).load("./compound.html");
+  };
+</script>
+<div class="row d-flex align-items-center">
+  <div class="col-md-12">
+    <h2 class="text-center my-2">Compound</h2>
+    <div
+      id="Instructions"
+      class="my-2 mx-0 border rounded bg-white text-dark p-2"
+    >
+      <h3>Instructions</h3>
+      <ol class="ps-3 mb-0">
+        <li>
+          Each area can be clicked to proceed to that particular scenario.
+        </li>
+        <li>This is a base point to pivot to other areas.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div
+      class="playground position-relative mx-auto"
+      onmousemove="compoundMouseover(event)"
+      onclick="selectArea(event)"
+    >
+      <img
+        id="compoundImg"
+        class="perimeter-bg w-100"
+        src="images/compound.png"
+      />
+    </div>
+  </div>
+</div>

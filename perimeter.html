@@ -1,0 +1,148 @@
+<style>
+  .chat-message {
+    border-bottom: 1px dotted;
+  }
+  .chat-message:last-child {
+    border-bottom: none;
+  }
+  .chat-message .message {
+    overflow: hidden;
+    white-space: nowrap;
+    width: 0;
+    transition: 2s ease-in-out;
+  }
+</style>
+<script>
+  let allow = false;
+  const gaurdCoords = [80, 185, 210, 352];
+  const gateCoords = [
+    { x: [192, 221], y: [245, 275] },
+    { x: [221, 285], y: [245, 378] },
+    { x: [285, 450], y: [245, 275] },
+  ];
+  const guard = $("#guard");
+  const gate = $("#gate");
+
+  const perimeterMouseover = event => {
+    const { offsetX, offsetY } = event;
+    const base = { offsetX, offsetY };
+    // console.log(base);
+
+    if (isWithin(base, gaurdCoords)) {
+      guard.addClass("show");
+    } else if (guard.hasClass("show")) {
+      guard.removeClass("show");
+    }
+
+    if (isWithin(base, gateCoords)) {
+      gate.addClass("show");
+    } else if (gate.hasClass("show")) {
+      gate.removeClass("show");
+    }
+  };
+
+  const clickGuard = () => {
+    $("#conversation").removeClass("d-none");
+
+    const guardMessage = $("#guard-message");
+    guardMessage.text("Hey there!");
+    guardMessage.width(`${guardMessage.closest(".chat-message").width()}px`);
+
+    const userMessage = $("#user-message");
+    userMessage.text("I'm a messenger for the EA.");
+    userMessage.width(`${userMessage.closest(".chat-message").width()}px`);
+
+    if (!allow) {
+      updateProgress(10);
+    }
+    allow = true;
+    $("#hint").removeClass("d-none");
+  };
+
+  const clickGate = () => {
+    if (!allow) return;
+    updateProgress(10);
+
+    $(anchor).load("./compound.html");
+  };
+</script>
+<div class="row">
+  <div class="col-md-12">
+    <h2 class="text-center my-2">Perimeter: Free Entry</h2>
+    <div
+      id="Instructions"
+      class="my-2 mx-0 border rounded bg-white text-dark p-2"
+    >
+      <h3>Instructions</h3>
+      <ol class="ps-3 mb-0">
+        <li>Interact with the <b>Elf Guard</b> to introduce yourself.</li>
+        <li>Click on the gate to proceed.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div
+      class="playground position-relative mx-auto"
+      onmousemove="perimeterMouseover(event)"
+    >
+      <img
+        class="playground-bg w-100"
+        src="images/perimeter/Complete image.png"
+      />
+      <img
+        id="guard"
+        onclick="clickGuard()"
+        class="position-absolute cursor-pointer overlay w-100"
+        src="images/perimeter/Glowing Elf - smaller.png"
+      />
+      <img
+        id="gate"
+        onclick="clickGate()"
+        class="position-absolute cursor-pointer overlay w-100"
+        src="images/perimeter/Glowing gate.png"
+      />
+    </div>
+  </div>
+</div>
+<div
+  id="conversation"
+  class="row conversation my-3 mx-0 border rounded bg-white text-dark d-none"
+>
+  <div class="col-md-12">
+    <div class="chat-message d-flex align-items-center py-2">
+      <i class="fas fa-user-secret me-2" aria-hidden="true"></i>
+      <div class="d-flex flex-column">
+        <p class="mb-0 fw-semibold">Elf Guard</p>
+        <p id="guard-message" class="message mb-0"></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="chat-message d-flex align-items-center py-2 border-0">
+      <i class="fas fa-user me-2" aria-hidden="true"></i>
+      <div class="d-flex flex-column">
+        <p class="mb-0 fw-semibold">You</p>
+        <p id="user-message" class="message mb-0"></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+      <symbol id="check-circle-fill" viewBox="0 0 16 16">
+        <path
+          d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+        />
+      </symbol>
+    </svg>
+    <div
+      id="hint"
+      class="alert alert-success d-flex align-items-center d-none"
+      role="alert"
+    >
+      <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:">
+        <use xlink:href="#check-circle-fill" />
+      </svg>
+      <div>Click on the <b>gate</b> to proceed.</div>
+    </div>
+  </div>
+</div>

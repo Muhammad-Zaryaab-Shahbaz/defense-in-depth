@@ -4,12 +4,15 @@
  * Date: 11/15/22
  */
 $(function() {
-  // $(anchor).load("./home.html");
+  $(homeAnchor).load("./home.html");
   showCases();
-  
+
+  $(perimeterAnchor).load("./perimeter.html");
+  $(compoundAnchor).load("./compound.html");
+  $(santaOfficeAnchor).load("./santa_office.html", () => {
+    santaModal = new bootstrap.Modal(document.getElementById("santaModal"), {});
+  });
+
   // TODO: Remove this
   // start();
-  
-  /* $("#home").addClass("d-none")
-  $(anchor).load("./compound.html"); */
 });

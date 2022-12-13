@@ -1,17 +1,3 @@
-<style>
-  .chat-message {
-    border-bottom: 1px dotted;
-  }
-  .chat-message:last-child {
-    border-bottom: none;
-  }
-  .chat-message .message {
-    overflow: hidden;
-    white-space: nowrap;
-    width: 0;
-    transition: 2s ease-in-out;
-  }
-</style>
 <div class="row">
   <div class="col-md-12">
     <div
@@ -20,32 +6,22 @@
     >
       <h3>Instructions</h3>
       <ol class="ps-3 mb-0">
-        <li>Interact with the <b>Elf Guard</b> to introduce yourself.</li>
-        <li>Click on the gate to proceed.</li>
+        <li>Click on the <b>vault</b>.</li>
+        <li>Enter the correct password to get the flag.</li>
       </ol>
     </div>
-    <h2 class="text-center my-2">Perimeter: Free Entry</h2>
+    <h2 class="text-center my-2">Santa's Office</h2>
   </div>
   <div class="col-md-12">
     <div
       class="playground position-relative mx-auto"
-      onmousemove="perimeterMouseover(event)"
+      onmousemove="santaOfficeMouseover(event)"
+      onclick="santaOfficeClick(event)"
     >
       <img
+        id="santaOffice"
         class="playground-bg w-100"
-        src="images/Perimeter/Complete image.png"
-      />
-      <img
-        id="guard"
-        onclick="clickGuard()"
-        class="position-absolute cursor-pointer overlay w-100"
-        src="images/Perimeter/Glowing Elf - smaller.png"
-      />
-      <img
-        id="gate"
-        onclick="clickGate()"
-        class="position-absolute cursor-pointer overlay w-100"
-        src="images/Perimeter/Glowing gate.png"
+        src="images/Santa Office/Desk.png"
       />
     </div>
   </div>
@@ -89,6 +65,39 @@
         <use xlink:href="#check-circle-fill" />
       </svg>
       <div>Click on the <b>gate</b> to proceed.</div>
+    </div>
+  </div>
+</div>
+<div
+  class="modal fade"
+  id="santaModal"
+  aria-hidden="true"
+  aria-labelledby="modalLabel"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Vault</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <input id="vaultPwd" class="form-control" placeholder="Password" />
+        <small id="vaultPasswordError" class="text-danger fw-bold d-none"
+          >Invalid Password</small
+        >
+        <button
+          class="neutral btn mt-2 w-100 text-white"
+          onclick="unlockVault()"
+        >
+          Unlock
+        </button>
+      </div>
     </div>
   </div>
 </div>

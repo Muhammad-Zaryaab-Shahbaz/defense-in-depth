@@ -44,9 +44,15 @@ body {
   fill: currentColor;
 }
 .back {
-  background: #3bc81e;
+  background: #525a6a;
 }
 .back:hover {
+  background: #474c54;
+}
+.thm-bg-success {
+  background: #3bc81e;
+}
+.thm-bg-success:hover {
   background: #32971d;
   outline: 1px solid #d4d8df;
 }
@@ -78,6 +84,9 @@ button:focus {
   border: 1px solid transparent !important;
 }
 .neutral {
+  background-color: #454e60;
+}
+.neutral:focus {
   background-color: #454e60;
 }
 .neutral:hover {

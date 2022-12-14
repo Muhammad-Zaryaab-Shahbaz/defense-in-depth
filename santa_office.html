@@ -87,7 +87,12 @@
         ></button>
       </div>
       <div class="modal-body">
-        <input id="vaultPwd" class="form-control" placeholder="Password" />
+        <input
+          id="vaultPwd"
+          onkeyup="checkEnter(event, () => unlockVault())"
+          class="form-control"
+          placeholder="Password"
+        />
         <small id="vaultPasswordError" class="text-danger fw-bold d-none"
           >Invalid Password</small
         >

@@ -13,6 +13,9 @@ $(function() {
     santaModal = new bootstrap.Modal(document.getElementById("santaModal"), {});
   });
 
+  const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+  const tooltipList = [...tooltips].map(t => new bootstrap.Tooltip(t));
+
   // TODO: Remove this
   // start();
 });

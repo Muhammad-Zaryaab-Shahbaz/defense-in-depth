@@ -52,6 +52,45 @@
     ></script>
   </head>
   <body>
+    <div
+      class="modal fade"
+      id="flag"
+      aria-hidden="true"
+      aria-labelledby="modalLabel"
+      tabindex="-1"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Flag</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div
+              class="d-flex align-items-center justify-content-between cursor-pointer mb-2"
+              data-bs-toggle="tooltip"
+              data-bs-title="Copy to clipboard"
+              onclick="copyFlag()"
+              id="flag-container"
+            >
+              <p id="flag-text" class="fw-bold text-center mb-0"></p>
+              <i class="fas fa-copy"></i>
+            </div>
+            <button
+              class="neutral btn mt-2 w-100 text-white"
+              onclick="nextCase()"
+            >
+              Next Case
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="container-fluid py-4">
       <div class="row">
         <div class="col-md-12">
@@ -62,7 +101,7 @@
                 <div class="col-md-6">
                   <button
                     id="homeBtn"
-                    class="btn btn-success back d-flex align-items-center d-none"
+                    class="btn text-white back d-flex align-items-center d-none"
                     onclick="goHome()"
                   >
                     <i class="fas fa-angle-left"></i>
@@ -93,7 +132,10 @@
             <!-- Compound End -->
 
             <!-- Santa Office -->
-            <div id="santaOfficeAnchor" class="container-fluid pb-3 d-none"></div>
+            <div
+              id="santaOfficeAnchor"
+              class="container-fluid pb-3 d-none"
+            ></div>
             <!-- Santa Office End -->
 
             <!-- Workshop -->
@@ -167,31 +209,6 @@
                 </div>
               </div>
             </div>
-
-            <div id="reward" class="container d-none">
-              <div class="row">
-                <div class="col-md-6 mx-auto">
-                  <div class="flag-container d-flex flex-column w-100 my-2">
-                    <div
-                      class="flag-header d-flex align-items-center justify-content-center"
-                    >
-                      <h5 class="mb-0">Flag</h5>
-                    </div>
-                    <div class="flag-content text-center">
-                      <p class="mb-0" id="flag">
-                        VEhNe0lUJ1MgQSBZM1QxIENIUjEkVE1BJH0=
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-12 text-center mt-3">
-                  <p class="mb-0">The culprit behind the misery was</p>
-                  <h1 class="text-center my-0 danger">
-                    The Bandit Yeti!
-                  </h1>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -199,6 +216,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"></script>
     <script src="utility.js"></script>
     <script src="script.js"></script>

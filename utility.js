@@ -7,6 +7,8 @@ const perimeterAnchor = "#perimeterAnchor";
 const compoundAnchor = "#compoundAnchor";
 const santaOfficeAnchor = "#santaOfficeAnchor";
 
+let flagModal = new bootstrap.Modal(document.getElementById("flag"), {});
+
 let currentCase = -1;
 let progress = 0;
 const cases = [
@@ -33,7 +35,8 @@ const showCases = () => {
 
 const updateProgress = num => {
   // console.log(progress, num)
-  progress += num;
+  // -1 means reset the progress
+  progress = num === -1 ? 0 : progress + num;
   const total = 100;
 
   const percent =
@@ -49,7 +52,7 @@ const goHome = () => {
 
   $(perimeterAnchor).addClass("d-none");
   $(santaOfficeAnchor).addClass("d-none");
-  $(perimeterAnchor).removeClass("d-none");
+  $(compoundAnchor).removeClass("d-none");
 };
 
 const isWithin = (event, coords) => {
@@ -82,6 +85,22 @@ const isWithin = (event, coords) => {
   return within;
 };
 
+const resetGame = () => {
+  $(homeAnchor).addClass("d-none");
+  $(compoundAnchor).addClass("d-none");
+  $(santaOfficeAnchor).addClass("d-none");
+  $("#homeBtn").addClass("d-none");
+  updateProgress(-1);
+
+  $(perimeterAnchor).removeClass("d-none");
+};
+
+const checkEnter = (event, fn) => {
+  if (event.code !== "Enter") return;
+
+  if (fn) fn();
+};
+
 /*******************************************
  * ***************** CASES *****************
  * *****************************************
@@ -93,6 +112,30 @@ const selectCase = num => {
     .find(".fa-solid")
     .removeClass("fa-lock")
     .addClass("fa-lock-open");
+};
+
+const deselectCase = num => {
+  const caseOne = $(`#case-${num}`);
+  caseOne.addClass("disabled");
+  caseOne
+    .find(".fa-solid")
+    .removeClass("fa-lock-open")
+    .addClass("fa-lock");
+};
+
+const completeCase = num => {
+  const caseOne = $(`#case-${num}`);
+  caseOne.removeClass("disabled option");
+  caseOne.addClass("thm-bg-success");
+};
+
+const nextCase = () => {
+  flagModal.toggle();
+  $("#flag-text").text("");
+
+  completeCase(currentCase);
+  currentCase++;
+  selectCase(currentCase);
 };
 
 const start = () => {
@@ -245,7 +288,6 @@ const santaOfficeClick = event => {
 
 const unlockVault = () => {
   const password = document.getElementById("vaultPwd").value;
-  console.log(password);
   if (password !== "S3cr3tV@ultPW") {
     $("#vaultPasswordError").removeClass("d-none");
     return;
@@ -254,4 +296,18 @@ const unlockVault = () => {
   // display flag
   $("#vaultPasswordError").addClass("d-none");
   santaModal.toggle();
+
+  $("#flag-text").text(atob("VEhNe0VaX2ZsQDYhfQ=="));
+  flagModal.toggle();
+};
+
+const copyFlag = () => {
+  const text = $("#flag-text").text();
+  navigator.clipboard.writeText(text);
+
+  const tooltip = bootstrap.Tooltip.getInstance("#flag-container");
+  tooltip.setContent({ ".tooltip-inner": "Copied!" });
+  setTimeout(() => {
+    tooltip.setContent({ ".tooltip-inner": "Copy to clipboard" });
+  }, 2000);
 };

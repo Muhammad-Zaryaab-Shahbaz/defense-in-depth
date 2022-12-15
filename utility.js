@@ -8,6 +8,7 @@ const compoundAnchor = "#compoundAnchor";
 const santaOfficeAnchor = "#santaOfficeAnchor";
 const workshopAnchor = "#workshopAnchor";
 const deerAnchor = "#deerAnchor";
+const eaOfficeAnchor = "#eaOfficeAnchor";
 
 const homeButton = "#homeBtn";
 
@@ -61,6 +62,7 @@ const goHome = () => {
   $(santaOfficeAnchor).addClass("d-none");
   $(workshopAnchor).addClass("d-none");
   $(deerAnchor).addClass("d-none");
+  $(eaOfficeAnchor).addClass("d-none");
   $(compoundAnchor).removeClass("d-none");
 };
 
@@ -275,7 +277,9 @@ const compoundClick = event => {
     $(compoundAnchor).addClass("d-none");
     $(deerAnchor).removeClass("d-none");
   } else if (isWithin(base, EAOfficeCoords)) {
-    alert("Executive Management Office");
+    $(homeButton).removeClass("d-none");
+    $(compoundAnchor).addClass("d-none");
+    $(eaOfficeAnchor).removeClass("d-none");
   }
 };
 
@@ -291,22 +295,18 @@ const santaOfficeMouseover = event => {
   const { offsetX, offsetY } = event;
   const base = { offsetX, offsetY };
 
-  const santaOffice = $("#santaOffice");
+  const vault = $("#vault");
+
   if (isWithin(base, vaultCoords)) {
-    santaOffice.addClass("cursor-pointer");
-  } else if (santaOffice.hasClass("cursor-pointer")) {
-    santaOffice.removeClass("cursor-pointer");
+    vault.addClass("show");
+  } else if (vault.hasClass("show")) {
+    vault.removeClass("show");
   }
 };
 
-const santaOfficeClick = event => {
-  const { offsetX, offsetY } = event;
-  const base = { offsetX, offsetY };
-
-  if (isWithin(base, vaultCoords)) {
-    // modal with textbox and unlock button
-    santaModal.toggle();
-  }
+const clickVault = () => {
+  // modal with textbox and unlock button
+  santaModal.toggle();
 };
 
 const unlockVault = () => {
@@ -333,4 +333,66 @@ const copyFlag = () => {
   setTimeout(() => {
     tooltip.setContent({ ".tooltip-inner": "Copy to clipboard" });
   }, 2000);
+};
+
+/*******************************************
+ * *****************************************
+ * *************** EA Office ***************
+ * *****************************************
+ * *****************************************
+ */
+let drawerCoords = [117, 266, 220, 273];
+let envelopeCoords = [255, 410, 129, 190];
+let isDrawerOpen = false;
+
+const eaOfficeMouseover = event => {
+  const { offsetX, offsetY } = event;
+  const base = { offsetX, offsetY };
+
+  if (isDrawerOpen) {
+    const envelope = $("#envelope");
+    if (isWithin(base, envelopeCoords)) {
+      envelope.addClass("show");
+    } else if (envelope.hasClass("show")) {
+      envelope.removeClass("show");
+    }
+    return;
+  }
+
+  const drawer = $("#drawer");
+  if (isWithin(base, drawerCoords)) {
+    drawer.addClass("show");
+  } else if (drawer.hasClass("show")) {
+    drawer.removeClass("show");
+  }
+};
+
+const openDrawer = () => {
+  isDrawerOpen = true;
+  const drawer = $("#drawer");
+
+  // update headings
+  $("#ea-office-heading").addClass("d-none");
+  $("#drawer-heading").removeClass("d-none");
+
+  // update images
+  $("#ea-office-bg").addClass("d-none");
+  $("#open-drawer").removeClass("d-none");
+  if (drawer.hasClass("show")) {
+    drawer.removeClass("show");
+  }
+};
+
+const closeDrawer = () => {
+  isDrawerOpen = false;
+  // update headings
+  $("#drawer-heading").addClass("d-none");
+  $("#ea-office-heading").removeClass("d-none");
+
+  $("#ea-office-bg").removeClass("d-none");
+  $("#open-drawer").addClass("d-none");
+};
+
+const clickEnvelope = () => {
+  alert("Envelope Clicked");
 };

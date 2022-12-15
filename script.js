@@ -18,6 +18,7 @@ $(function() {
     santaModal = new bootstrap.Modal(document.getElementById("santaModal"), {});
   });
   $(deerAnchor).load("./deer_stable.html");
+  $(eaOfficeAnchor).load("./ea_office.html");
 
   const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
   [...tooltips].map(t => new bootstrap.Tooltip(t));

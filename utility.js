@@ -6,7 +6,12 @@ const homeAnchor = "#homeAnchor";
 const perimeterAnchor = "#perimeterAnchor";
 const compoundAnchor = "#compoundAnchor";
 const santaOfficeAnchor = "#santaOfficeAnchor";
+const workshopAnchor = "#workshopAnchor";
+const deerAnchor = "#deerAnchor";
 
+const homeButton = "#homeBtn";
+
+let santaModal, workshopModal;
 let flagModal = new bootstrap.Modal(document.getElementById("flag"), {});
 
 let currentCase = -1;
@@ -19,7 +24,9 @@ const cases = [
 const showCases = () => {
   let content = `<div class="row">`;
   cases.map((item, i) => {
-    content += `<div class="col-4 py-1">
+    content += `<div class="case-container col-4 py-1 position-relative">
+    <span class="case-badge badge text-bg-success position-absolute d-none"
+      id="case-badge-${i + 1}">Active</span>
           <button id="case-${i + 1}"
            class="option case btn btn-lg text-white my-1 w-100 d-flex flex-column align-items-center justify-content-center fs-6 h-100 disabled">
               <i class="fa-solid fa-lock"></i>
@@ -48,10 +55,12 @@ const updateProgress = num => {
 };
 
 const goHome = () => {
-  $("#homeBtn").addClass("d-none");
+  $(homeButton).addClass("d-none");
 
   $(perimeterAnchor).addClass("d-none");
   $(santaOfficeAnchor).addClass("d-none");
+  $(workshopAnchor).addClass("d-none");
+  $(deerAnchor).addClass("d-none");
   $(compoundAnchor).removeClass("d-none");
 };
 
@@ -86,10 +95,9 @@ const isWithin = (event, coords) => {
 };
 
 const resetGame = () => {
-  $(homeAnchor).addClass("d-none");
+  goHome();
   $(compoundAnchor).addClass("d-none");
-  $(santaOfficeAnchor).addClass("d-none");
-  $("#homeBtn").addClass("d-none");
+
   updateProgress(-1);
 
   $(perimeterAnchor).removeClass("d-none");
@@ -112,6 +120,7 @@ const selectCase = num => {
     .find(".fa-solid")
     .removeClass("fa-lock")
     .addClass("fa-lock-open");
+  $(`#case-badge-${num}`).removeClass("d-none");
 };
 
 const deselectCase = num => {
@@ -127,6 +136,7 @@ const completeCase = num => {
   const caseOne = $(`#case-${num}`);
   caseOne.removeClass("disabled option");
   caseOne.addClass("thm-bg-success");
+  $(`#case-badge-${num}`).text("Completed");
 };
 
 const nextCase = () => {
@@ -136,6 +146,7 @@ const nextCase = () => {
   completeCase(currentCase);
   currentCase++;
   selectCase(currentCase);
+  resetGame();
 };
 
 const start = () => {
@@ -206,6 +217,17 @@ const clickGate = () => {
 
   $(perimeterAnchor).addClass("d-none");
   $(compoundAnchor).removeClass("d-none");
+
+  // reset state of the perimeter
+  $("#conversation").addClass("d-none");
+  const guardMessage = $("#guard-message");
+  guardMessage.text("");
+  guardMessage.width(`0px`);
+
+  const userMessage = $("#user-message");
+  userMessage.text("");
+  userMessage.width(`0px`);
+  allowPerimeter = false;
 };
 
 /*******************************************
@@ -243,13 +265,15 @@ const compoundClick = event => {
   const base = { offsetX, offsetY };
 
   if (isWithin(base, workshopCoords)) {
-    alert("Workshop");
+    workshopModal.toggle();
   } else if (isWithin(base, officeCoords)) {
-    $("#homeBtn").removeClass("d-none");
+    $(homeButton).removeClass("d-none");
     $(compoundAnchor).addClass("d-none");
     $(santaOfficeAnchor).removeClass("d-none");
   } else if (isWithin(base, stableCoords)) {
-    alert("Deer Stable");
+    $(homeButton).removeClass("d-none");
+    $(compoundAnchor).addClass("d-none");
+    $(deerAnchor).removeClass("d-none");
   } else if (isWithin(base, EAOfficeCoords)) {
     alert("Executive Management Office");
   }
@@ -261,7 +285,6 @@ const compoundClick = event => {
  * *****************************************
  * *****************************************
  */
-let santaModal;
 const vaultCoords = [52, 265, 83, 365];
 
 const santaOfficeMouseover = event => {

@@ -35,6 +35,12 @@ body {
 .option {
   background-color: #454e60;
 }
+.option:hover {
+  background-color: #454e6087;
+}
+.case-container:hover .case-badge {
+  outline: 1px solid;
+}
 .case {
   line-height: 1.25;
 }
@@ -92,6 +98,11 @@ button:focus {
 .neutral:hover {
   background-color: #454e6087;
 }
+.case-badge {
+  right: 0;
+  z-index: 1;
+  top: 0;
+}
 /** OLD **/
 
 .logo {
@@ -105,9 +116,6 @@ button:focus {
 }
 button:focus {
   border: 1px solid transparent !important;
-}
-.option:hover {
-  background-color: #454e6087;
 }
 .flag-container {
   background-color: #161e2d;

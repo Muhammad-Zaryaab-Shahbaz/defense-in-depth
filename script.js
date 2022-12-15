@@ -8,13 +8,19 @@ $(function() {
   showCases();
 
   $(perimeterAnchor).load("./perimeter.html");
-  $(compoundAnchor).load("./compound.html");
+  $(compoundAnchor).load("./compound.html", () => {
+    workshopModal = new bootstrap.Modal(
+      document.getElementById("workshop-status"),
+      {}
+    );
+  });
   $(santaOfficeAnchor).load("./santa_office.html", () => {
     santaModal = new bootstrap.Modal(document.getElementById("santaModal"), {});
   });
+  $(deerAnchor).load("./deer_stable.html");
 
   const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-  const tooltipList = [...tooltips].map(t => new bootstrap.Tooltip(t));
+  [...tooltips].map(t => new bootstrap.Tooltip(t));
 
   // TODO: Remove this
   // start();

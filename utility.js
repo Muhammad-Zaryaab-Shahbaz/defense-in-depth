@@ -9,6 +9,7 @@ const santaOfficeAnchor = "#santaOfficeAnchor";
 const workshopAnchor = "#workshopAnchor";
 const deerAnchor = "#deerAnchor";
 const eaOfficeAnchor = "#eaOfficeAnchor";
+const flagAnchor = "#flagAnchor";
 
 const homeButton = "#homeBtn";
 
@@ -67,6 +68,7 @@ const goHome = () => {
   $(workshopAnchor).addClass("d-none");
   $(deerAnchor).addClass("d-none");
   $(eaOfficeAnchor).addClass("d-none");
+  $(flagAnchor).addClass("d-none");
   $(compoundAnchor).removeClass("d-none");
 };
 
@@ -282,6 +284,13 @@ const compoundClick = event => {
   const base = { offsetX, offsetY };
 
   if (isWithin(base, workshopCoords)) {
+    if (currentCase === 1) {
+      $("#workshop-notice").html("Workshop is closed at this moment.");
+    } else if (currentCase === 2) {
+      $("#workshop-notice").html(
+        "Workshop is closed at this moment. Someone noticed you snooping around but decided not to tell anyone about it."
+      );
+    }
     workshopModal.toggle();
   } else if (isWithin(base, officeCoords)) {
     $(homeButton).removeClass("d-none");
@@ -335,8 +344,9 @@ const unlockVault = () => {
   $("#vaultPasswordError").addClass("d-none");
   santaModal.toggle();
 
-  $("#flag-text").text(atob("VEhNe0VaX2ZsQDYhfQ=="));
-  flagModal.toggle();
+  // navigate to the flag screen
+  $(santaOfficeAnchor).addClass("d-none");
+  $(flagAnchor).removeClass("d-none");
 };
 
 /*******************************************
@@ -400,4 +410,50 @@ const closeDrawer = () => {
 const clickEnvelope = () => {
   $("#vault-pwd").html(caseOneVaultPwd);
   vaultPwdModal.toggle();
+};
+
+/*******************************************
+ * *****************************************
+ * ***************** Flag ******************
+ * *****************************************
+ * *****************************************
+ */
+let bookCoords = [426, 594, 88, 336];
+let isBookOpen = false;
+
+const flagMouseover = event => {
+  const { offsetX, offsetY } = event;
+  const base = { offsetX, offsetY };
+
+  if (isBookOpen) {
+    const book = $("#book");
+    if (isWithin(base, bookCoords)) {
+      book.addClass("show");
+    } else if (book.hasClass("show")) {
+      book.removeClass("show");
+    }
+    return;
+  }
+
+  const book = $("#book");
+  if (isWithin(base, bookCoords)) {
+    book.addClass("show");
+  } else if (book.hasClass("show")) {
+    book.removeClass("show");
+  }
+};
+
+const openBook = () => {
+  isBookOpen = true;
+  const book = $("#book");
+
+  // update images
+  $("#flag-bg").addClass("d-none");
+  $("#open-book").removeClass("d-none");
+  if (book.hasClass("show")) {
+    book.removeClass("show");
+  }
+
+  $("#flag-text").text(atob("VEhNe0VaX2ZsQDYhfQ=="));
+  flagModal.toggle();
 };

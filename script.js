@@ -44,6 +44,10 @@ const initEAOffice = () => {
   );
 };
 
+const initFlag = () => {
+  return makePromise(flagAnchor, "./flag.html");
+};
+
 $(function() {
   $(homeAnchor).load("./home.html");
   showCases();
@@ -54,6 +58,7 @@ $(function() {
     initSantaOffice(),
     initDeerStable(),
     initEAOffice(),
+    initFlag(),
   ]).then(() => {
     const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     [...tooltips].map(t => new bootstrap.Tooltip(t));

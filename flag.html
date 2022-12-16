@@ -1,0 +1,35 @@
+<div class="row">
+  <div class="col-md-12">
+    <div
+      id="instructions"
+      class="my-2 mx-0 border rounded bg-white text-dark p-2"
+    >
+      <h3>Instructions</h3>
+      <p>The vault has been unlocked. Open the book and get the flag!</p>
+    </div>
+    <h2 class="text-center my-2">Flag</h2>
+  </div>
+  <div class="col-md-12">
+    <div
+      class="playground position-relative mx-auto"
+      onmousemove="flagMouseover(event)"
+    >
+      <img
+        id="flag-bg"
+        class="playground-bg w-100"
+        src="images/Flag _ Opened vault/Opened vault.png"
+      />
+      <img
+        id="book"
+        onclick="openBook()"
+        class="position-absolute cursor-pointer overlay w-100"
+        src="images/Flag _ Opened vault/Glowing book.png"
+      />
+      <img
+        id="open-book"
+        class="playground-bg w-100 d-none"
+        src="images/Flag _ Opened vault/Opened book.png"
+      />
+    </div>
+  </div>
+</div>

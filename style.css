@@ -7,6 +7,7 @@ h3,
 h4,
 p,
 a,
+li,
 button {
   font-family: "Source Sans Pro", "Ubuntu", sans-serif !important;
 }
@@ -18,7 +19,7 @@ body {
 }
 
 body {
-  background-color: #161e2d;
+  background-color: #212c42;
   color: white;
 }
 .game-body {
@@ -26,7 +27,7 @@ body {
   border: 1px solid #ececec;
   padding: 5px;
   min-height: calc(100vh - 50px);
-  background-color: #192740;
+  background-color: #212c42;
   overflow: auto;
 }
 .danger {

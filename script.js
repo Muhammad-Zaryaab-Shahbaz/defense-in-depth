@@ -3,25 +3,61 @@
  * Email: zariab64@gmail.com
  * Date: 11/15/22
  */
+const makePromise = (anchor, filePath, callback) => {
+  return new Promise(resolve => {
+    $(anchor).load(filePath, () => {
+      if (callback) callback();
+      resolve(true);
+    });
+  });
+};
+
+const initPerimeter = () => {
+  return makePromise(perimeterAnchor, "./perimeter.html");
+};
+
+const initCompound = () => {
+  return makePromise(
+    compoundAnchor,
+    "./compound.html",
+    () => (workshopModal = initModal("workshop-status"))
+  );
+};
+
+const initSantaOffice = () => {
+  return makePromise(
+    santaOfficeAnchor,
+    "./santa_office.html",
+    () => (santaModal = initModal("santaModal"))
+  );
+};
+
+const initDeerStable = () => {
+  return makePromise(deerAnchor, "./deer_stable.html");
+};
+
+const initEAOffice = () => {
+  return makePromise(
+    eaOfficeAnchor,
+    "./ea_office.html",
+    () => (vaultPwdModal = initModal("vaultPwdModal"))
+  );
+};
+
 $(function() {
   $(homeAnchor).load("./home.html");
   showCases();
 
-  $(perimeterAnchor).load("./perimeter.html");
-  $(compoundAnchor).load("./compound.html", () => {
-    workshopModal = new bootstrap.Modal(
-      document.getElementById("workshop-status"),
-      {}
-    );
+  Promise.all([
+    initPerimeter(),
+    initCompound(),
+    initSantaOffice(),
+    initDeerStable(),
+    initEAOffice(),
+  ]).then(() => {
+    const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    [...tooltips].map(t => new bootstrap.Tooltip(t));
   });
-  $(santaOfficeAnchor).load("./santa_office.html", () => {
-    santaModal = new bootstrap.Modal(document.getElementById("santaModal"), {});
-  });
-  $(deerAnchor).load("./deer_stable.html");
-  $(eaOfficeAnchor).load("./ea_office.html");
-
-  const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-  [...tooltips].map(t => new bootstrap.Tooltip(t));
 
   // TODO: Remove this
   // start();

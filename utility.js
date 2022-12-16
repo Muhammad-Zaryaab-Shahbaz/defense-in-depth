@@ -12,8 +12,11 @@ const eaOfficeAnchor = "#eaOfficeAnchor";
 
 const homeButton = "#homeBtn";
 
-let santaModal, workshopModal;
-let flagModal = new bootstrap.Modal(document.getElementById("flag"), {});
+const caseOneVaultPwd = "S3cr3tV@ultPW";
+
+let santaModal, workshopModal, vaultPwdModal;
+const initModal = id => new bootstrap.Modal(document.getElementById(id), {});
+let flagModal = initModal("flag");
 
 let currentCase = -1;
 let progress = 0;
@@ -22,6 +25,7 @@ const cases = [
   "Prevention Focused",
   "Disrupting Adversarial Objectives",
 ];
+
 const showCases = () => {
   let content = `<div class="row">`;
   cases.map((item, i) => {
@@ -109,6 +113,17 @@ const checkEnter = (event, fn) => {
   if (event.code !== "Enter") return;
 
   if (fn) fn();
+};
+
+const copyText = (label = "flag-text", container = "flag-container") => {
+  const text = $(`#${label}`).text();
+  navigator.clipboard.writeText(text);
+
+  const tooltip = bootstrap.Tooltip.getInstance(`#${container}`);
+  tooltip.setContent({ ".tooltip-inner": "Copied!" });
+  setTimeout(() => {
+    tooltip.setContent({ ".tooltip-inner": "Copy to clipboard" });
+  }, 2000);
 };
 
 /*******************************************
@@ -311,7 +326,7 @@ const clickVault = () => {
 
 const unlockVault = () => {
   const password = document.getElementById("vaultPwd").value;
-  if (password !== "S3cr3tV@ultPW") {
+  if (password !== caseOneVaultPwd) {
     $("#vaultPasswordError").removeClass("d-none");
     return;
   }
@@ -322,17 +337,6 @@ const unlockVault = () => {
 
   $("#flag-text").text(atob("VEhNe0VaX2ZsQDYhfQ=="));
   flagModal.toggle();
-};
-
-const copyFlag = () => {
-  const text = $("#flag-text").text();
-  navigator.clipboard.writeText(text);
-
-  const tooltip = bootstrap.Tooltip.getInstance("#flag-container");
-  tooltip.setContent({ ".tooltip-inner": "Copied!" });
-  setTimeout(() => {
-    tooltip.setContent({ ".tooltip-inner": "Copy to clipboard" });
-  }, 2000);
 };
 
 /*******************************************
@@ -394,5 +398,6 @@ const closeDrawer = () => {
 };
 
 const clickEnvelope = () => {
-  alert("Envelope Clicked");
+  $("#vault-pwd").html(caseOneVaultPwd);
+  vaultPwdModal.toggle();
 };

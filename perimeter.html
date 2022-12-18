@@ -15,19 +15,6 @@
 <div class="row">
   <div class="col-md-12">
     <div
-      id="instructions"
-      class="my-2 mx-0 border rounded bg-white text-dark p-2"
-    >
-      <h3>Instructions</h3>
-      <ol class="ps-3 mb-0">
-        <li>Interact with the <b>Elf Guard</b> to introduce yourself.</li>
-        <li>Click on the gate to proceed.</li>
-      </ol>
-    </div>
-    <h2 class="text-center my-2">Perimeter: Essentially Free Entry</h2>
-  </div>
-  <div class="col-md-12">
-    <div
       class="playground position-relative mx-auto"
       onmousemove="perimeterMouseover(event)"
     >
@@ -52,23 +39,42 @@
 </div>
 <div
   id="conversation"
-  class="row conversation my-3 mx-0 border rounded bg-white text-dark d-none"
+  class="row conversation my-3 mx-0 rounded text-white thm-bg-dark py-2 d-none"
 >
   <div class="col-md-12">
-    <div class="chat-message d-flex align-items-center py-2">
-      <i class="fas fa-user-secret me-2" aria-hidden="true"></i>
+    <div class="chat-message d-flex align-items-center pt-2 pb-1">
+      <i
+        class="fas fa-user-secret me-2 p-3 rounded-circle avatar"
+        aria-hidden="true"
+      ></i>
       <div class="d-flex flex-column">
-        <p class="mb-0 fw-semibold">Elf Guard</p>
+        <p class="mb-0 fw-semibold thm-text-success">Elf Guard</p>
         <p id="guard-message" class="message mb-0"></p>
       </div>
     </div>
   </div>
-  <div class="col-md-12">
+  <div class="col-md-12 d-none" id="guard-questions"></div>
+  <div class="col-md-12" id="user-reply">
     <div class="chat-message d-flex align-items-center py-2 border-0">
-      <i class="fas fa-user me-2" aria-hidden="true"></i>
+      <i
+        class="fas fa-user me-2 p-3 rounded-circle avatar"
+        aria-hidden="true"
+      ></i>
       <div class="d-flex flex-column">
-        <p class="mb-0 fw-semibold">You</p>
+        <p class="mb-0 fw-semibold thm-text-success">You</p>
         <p id="user-message" class="message mb-0"></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 d-none" id="guard-reply">
+    <div class="chat-message d-flex align-items-center pt-2 pb-1">
+      <i
+        class="fas fa-user-secret me-2 p-3 rounded-circle avatar"
+        aria-hidden="true"
+      ></i>
+      <div class="d-flex flex-column">
+        <p class="mb-0 fw-semibold thm-text-success">Elf Guard</p>
+        <p id="guard-reply-message" class="message mb-0"></p>
       </div>
     </div>
   </div>
@@ -82,7 +88,7 @@
     </svg>
     <div
       id="hint"
-      class="alert alert-success d-flex align-items-center d-none"
+      class="alert alert-success d-flex align-items-center my-1 d-none"
       role="alert"
     >
       <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:">

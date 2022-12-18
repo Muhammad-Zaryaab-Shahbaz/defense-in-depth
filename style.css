@@ -25,7 +25,6 @@ body {
 .game-body {
   border-radius: 10px;
   border: 1px solid #ececec;
-  padding: 5px;
   min-height: calc(100vh - 50px);
   background-color: #212c42;
   overflow: auto;
@@ -62,6 +61,9 @@ body {
 .thm-bg-success:hover {
   background: #32971d;
   outline: 1px solid #d4d8df;
+}
+.thm-text-success {
+  color: #a3ea2a;
 }
 .playground {
   width: 700px;
@@ -104,11 +106,19 @@ button:focus {
   z-index: 1;
   top: 0;
 }
-/** OLD **/
-
+.thm-bg-dark {
+  background-color: #151c2b;
+}
+.avatar {
+  background: #212c42;
+  border: 1px solid #a3ea2a;
+}
 .logo {
   max-height: 80px;
 }
+/** OLD **/
+
+
 .question-count-block {
   color: #c4c6ca;
 }

@@ -27,6 +27,8 @@ const cases = [
   "Disrupting Adversarial Objectives",
 ];
 
+const setTitle = title => $("#title").text(title);
+
 const showCases = () => {
   let content = `<div class="row">`;
   cases.map((item, i) => {
@@ -69,6 +71,8 @@ const goHome = () => {
   $(deerAnchor).addClass("d-none");
   $(eaOfficeAnchor).addClass("d-none");
   $(flagAnchor).addClass("d-none");
+
+  setTitle("Compound");
   $(compoundAnchor).removeClass("d-none");
 };
 
@@ -106,8 +110,7 @@ const resetGame = () => {
   goHome();
   $(compoundAnchor).addClass("d-none");
 
-  updateProgress(-1);
-
+  setTitle("Perimeter");
   $(perimeterAnchor).removeClass("d-none");
 };
 
@@ -173,7 +176,8 @@ const start = () => {
   selectCase(currentCase);
   $(homeAnchor).addClass("d-none");
 
-  $("#stats").removeClass("d-none");
+  $("#header").removeClass("d-none");
+  setTitle("Perimeter: Essentially Free Entry");
   $(perimeterAnchor).removeClass("d-none");
 };
 
@@ -184,12 +188,20 @@ const start = () => {
  * *****************************************
  */
 let allowPerimeter = false;
+let answered = false;
+
 const gaurdCoords = [80, 185, 210, 352];
 const gateCoords = [
   { x: [192, 221], y: [245, 275] },
   { x: [221, 285], y: [245, 378] },
   { x: [285, 450], y: [245, 275] },
 ];
+const guardQuestions = [
+  "Visit deer stable",
+  "Delivery for Santa's EA",
+  "Meet my friends",
+];
+const correctAnswer = 1;
 
 const perimeterMouseover = event => {
   const { offsetX, offsetY } = event;
@@ -211,47 +223,97 @@ const perimeterMouseover = event => {
   }
 };
 
-const clickGuard = () => {
-  $("#conversation").removeClass("d-none");
+const initGuardQuestions = () => {
+  const questions = guardQuestions
+    .map(
+      (question, index) => `
+      <div class="col-md-4">
+        <button class="guard-answer neutral btn w-100 text-white mb-1" id="guard-answer-${index}" 
+          onclick="answerGuard(${index})">${question}</button>
+      </div>`
+    )
+    .join("");
+  const content = `<p class="mb-1">Choose an answer.</p><div class="row">${questions}</div>`;
+  $("#guard-questions").html(content);
+  $("#guard-questions").removeClass("d-none");
+};
 
-  const guardMessage = $("#guard-message");
-  guardMessage.text("Hey there!");
-  guardMessage.width(`${guardMessage.closest(".chat-message").width()}px`);
+const setGuardMessage = (message = null, id = "guard-message") => {
+  const guardMessage = $(`#${id}`);
+  guardMessage.text(message || "");
+  const width = message ? guardMessage.closest(".chat-message").width() : 0;
+  guardMessage.width(`${width}px`);
+};
 
+const setUserMessage = (message = null) => {
   const userMessage = $("#user-message");
-  userMessage.text("I'm a messenger for the EA.");
-  userMessage.width(`${userMessage.closest(".chat-message").width()}px`);
+  userMessage.text(message);
+  const width = message ? userMessage.closest(".chat-message").width() : 0;
+  userMessage.width(`${width}px`);
+};
 
-  if (!allowPerimeter) {
-    updateProgress(10);
-    document.getElementById("conversation").scrollIntoView();
+const answerGuard = index => {
+  if (answered) return;
+
+  $(".guard-answer").removeClass("text-bg-danger");
+  if (index !== correctAnswer) {
+    $(`#guard-answer-${index}`).addClass("text-bg-danger");
+    return;
   }
-  allowPerimeter = true;
+
+  $(`#guard-answer-${index}`).addClass("text-bg-success");
+  $("#user-reply").removeClass("d-none");
+  setUserMessage("I have a delivery for Santa's EA");
+  $("#guard-reply").removeClass("d-none");
+  setGuardMessage(
+    "Okay! let me log your details quickly so you can go on your merry way.",
+    "guard-reply-message"
+  );
+
   $("#hint").removeClass("d-none");
+  answered = true;
+  allowPerimeter = true;
+};
+
+const clickGuard = () => {
+  if (allowPerimeter) return;
+
+  $("#conversation").removeClass("d-none");
+  if (currentCase === 1) {
+    setGuardMessage("Hey there!");
+    setUserMessage("I'm a messenger for the EA.");
+
+    allowPerimeter = true;
+    $("#hint").removeClass("d-none");
+  } else if (currentCase === 2) {
+    setGuardMessage("Hey there! What is your purpose of the visit?");
+    initGuardQuestions();
+    $("#user-reply").addClass("d-none");
+  }
+
+  document.getElementById("conversation").scrollIntoView();
 };
 
 const clickGate = () => {
   if (!allowPerimeter) return;
-  updateProgress(10);
 
   $(perimeterAnchor).addClass("d-none");
+  setTitle("Compound");
   $(compoundAnchor).removeClass("d-none");
 
   // reset state of the perimeter
   $("#conversation").addClass("d-none");
-  const guardMessage = $("#guard-message");
-  guardMessage.text("");
-  guardMessage.width(`0px`);
+  setGuardMessage();
 
-  const userMessage = $("#user-message");
-  userMessage.text("");
-  userMessage.width(`0px`);
+  setUserMessage();
   allowPerimeter = false;
+  answered = false;
+  $("#hint").addClass("d-none");
 };
 
 /*******************************************
  * *****************************************
- * *************** Compound ***************
+ * *************** Compound ****************
  * *****************************************
  * *****************************************
  */
@@ -295,14 +357,20 @@ const compoundClick = event => {
   } else if (isWithin(base, officeCoords)) {
     $(homeButton).removeClass("d-none");
     $(compoundAnchor).addClass("d-none");
+
+    setTitle("Santa Office");
     $(santaOfficeAnchor).removeClass("d-none");
   } else if (isWithin(base, stableCoords)) {
     $(homeButton).removeClass("d-none");
     $(compoundAnchor).addClass("d-none");
+
+    setTitle("Deer stable");
     $(deerAnchor).removeClass("d-none");
   } else if (isWithin(base, EAOfficeCoords)) {
     $(homeButton).removeClass("d-none");
     $(compoundAnchor).addClass("d-none");
+
+    setTitle("Santa's EA Office");
     $(eaOfficeAnchor).removeClass("d-none");
   }
 };
@@ -346,6 +414,8 @@ const unlockVault = () => {
 
   // navigate to the flag screen
   $(santaOfficeAnchor).addClass("d-none");
+
+  setTitle("Flag");
   $(flagAnchor).removeClass("d-none");
 };
 
@@ -355,8 +425,8 @@ const unlockVault = () => {
  * *****************************************
  * *****************************************
  */
-let drawerCoords = [117, 266, 220, 273];
-let envelopeCoords = [255, 410, 129, 190];
+const drawerCoords = [117, 266, 220, 273];
+const envelopeCoords = [255, 410, 129, 190];
 let isDrawerOpen = false;
 
 const eaOfficeMouseover = event => {
@@ -386,7 +456,6 @@ const openDrawer = () => {
   const drawer = $("#drawer");
 
   // update headings
-  $("#ea-office-heading").addClass("d-none");
   $("#drawer-heading").removeClass("d-none");
 
   // update images
@@ -401,7 +470,6 @@ const closeDrawer = () => {
   isDrawerOpen = false;
   // update headings
   $("#drawer-heading").addClass("d-none");
-  $("#ea-office-heading").removeClass("d-none");
 
   $("#ea-office-bg").removeClass("d-none");
   $("#open-drawer").addClass("d-none");
@@ -418,7 +486,7 @@ const clickEnvelope = () => {
  * *****************************************
  * *****************************************
  */
-let bookCoords = [426, 594, 88, 336];
+const bookCoords = [426, 594, 88, 336];
 let isBookOpen = false;
 
 const flagMouseover = event => {

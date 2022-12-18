@@ -95,13 +95,34 @@
       <div class="row">
         <div class="col-md-12">
           <div class="game-body d-flex flex-column justify-content-between">
-            <!-- Stats -->
-            <div id="stats" class="container-fluid pt-3 d-none">
+            <!-- Header -->
+            <div
+              id="header"
+              class="container-fluid thm-bg-dark p-4 pb-0 d-none"
+            >
+              <div class="row">
+                <div class="col-sm-12 col-md-2 mb-sm-3 mb-md-0">
+                  <div class="text-center h-100 d-flex align-items-center">
+                    <img
+                      class="logo w-100"
+                      alt="Logo"
+                      src="https://assets.tryhackme.com/img/logo/tryhackme_logo_full.svg"
+                    />
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-10">
+                  <h3 class="text-center mb-0" id="title">Perimeter</h3>
+                  <p class="text-center mb-0 thm-text-success">
+                    Interact with items that highlight on hover.
+                  </p>
+                </div>
+                <div class="col-md-12"><hr /></div>
+              </div>
               <div class="row d-flex align-items-center">
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <button
                     id="homeBtn"
-                    class="btn text-white back d-flex align-items-center d-none"
+                    class="btn text-white back d-flex align-items-center mb-3 d-none"
                     onclick="goHome()"
                   >
                     <i class="fas fa-angle-left"></i>
@@ -110,48 +131,51 @@
                     >
                   </button>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
+                  <div id="timer"></div>
+                </div>
+                <div class="col-md-4">
                   <p class="mb-0 text-end d-none">
                     Progress: <span id="puzzle-progress">--</span>
                   </p>
                 </div>
               </div>
             </div>
-            <!-- Stats end -->
+            <!-- Header End -->
 
             <!-- Home -->
-            <div id="homeAnchor" class="container-fluid pb-3"></div>
+            <div id="homeAnchor" class="container-fluid py-3"></div>
             <!-- Home End -->
 
             <!-- Perimeter -->
-            <div id="perimeterAnchor" class="container-fluid pb-3 d-none"></div>
+            <div id="perimeterAnchor" class="container-fluid py-3 d-none"></div>
             <!-- Perimeter End -->
 
             <!-- Compound -->
-            <div id="compoundAnchor" class="container-fluid pb-3 d-none"></div>
+            <div id="compoundAnchor" class="container-fluid py-3 d-none"></div>
             <!-- Compound End -->
 
             <!-- Santa Office -->
             <div
               id="santaOfficeAnchor"
-              class="container-fluid pb-3 d-none"
+              class="container-fluid py-3 d-none"
             ></div>
             <!-- Santa Office End -->
 
             <!-- Workshop -->
-            <div id="workshopAnchor" class="container-fluid pb-3 d-none"></div>
+            <div id="workshopAnchor" class="container-fluid py-3 d-none"></div>
             <!-- Workshop End -->
 
             <!-- EA Office -->
-            <div id="eaOfficeAnchor" class="container-fluid pb-3 d-none"></div>
+            <div id="eaOfficeAnchor" class="container-fluid py-3 d-none"></div>
             <!-- EA Office End -->
 
             <!-- Deer Stable -->
-            <div id="deerAnchor" class="container-fluid pb-3 d-none"></div>
+            <div id="deerAnchor" class="container-fluid py-3 d-none"></div>
             <!-- Deer Stable End -->
 
             <!-- Flag -->
-            <div id="flagAnchor" class="container-fluid pb-3 d-none"></div>
+            <div id="flagAnchor" class="container-fluid py-3 d-none"></div>
             <!-- Flag End -->
 
             <!-- Cases -->

@@ -48,6 +48,7 @@ let isBookOpen = false;
 
 const caseOneVaultPwd = "S3cr3tV@ultPW";
 const caseTwoLaptopPwd = "MilkAndCookies";
+const caseTwoVaultTxt = "3XtrR@_S3cr3tV@ultPW";
 
 const initModal = id => new bootstrap.Modal(document.getElementById(id), {});
 const flagModal = initModal("flag");
@@ -56,7 +57,7 @@ const infoModal = initModal("infoModal");
 const pwdModal = initModal("pwdModal");
 const warningModal = initModal("warningModal");
 
-let targetTime;
+let targetTime, timerInterval;
 
 let currentCase = -1;
 let progress = 0;
@@ -73,7 +74,7 @@ const setTimer = minutes => {
   targetTime = new Date(new Date().getTime() + increment).getTime();
 
   // Update the count down every 1 second
-  const timerInterval = setInterval(function() {
+  timerInterval = setInterval(function() {
     // Get today's date and time
     const now = new Date().getTime();
 
@@ -196,6 +197,12 @@ const resetGame = () => {
 
   setMeta(meta.PERIMETER);
   $(perimeterAnchor).removeClass("d-none");
+
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    document.getElementById("time").innerHTML = "00:00";
+  }
+  $("#clock").addClass("d-none");
 };
 
 const checkEnter = (event, fn) => {
@@ -396,6 +403,7 @@ const clickGuard = () => {
   setGuardMessage("Hey there! What is your purpose of the visit?");
   initGuardQuestions();
   $("#user-reply").addClass("d-none");
+  $("#guard-reply").addClass("d-none");
 
   document.getElementById("conversation").scrollIntoView();
 };
@@ -415,6 +423,8 @@ const clickGate = () => {
 
   if (currentCase === 2) {
     setTimer(3);
+  } else if (currentCase === 3) {
+    setTimer(4);
   }
 
   // reset state of the perimeter
@@ -502,6 +512,11 @@ const compoundClick = event => {
 const vaultCoords = [52, 265, 83, 365];
 const pwdHintCoords = [403, 578, 169, 188];
 const pwdInputCoords = [403, 578, 205, 225];
+const laptopCoords = [
+  { x: [338, 637], y: [90, 275] },
+  { x: [295, 680], y: [275, 363] },
+];
+let santaLaptopLogin = false;
 
 const santaOfficeMouseover = event => {
   const { offsetX, offsetY } = event;
@@ -516,6 +531,16 @@ const santaOfficeMouseover = event => {
   }
 
   if (currentCase === 2) {
+    if (santaLaptopLogin) {
+      const laptop = $("#txt-file-laptop-glow");
+      if (isWithin(base, laptopCoords)) {
+        laptop.addClass("show");
+      } else if (laptop.hasClass("show")) {
+        laptop.removeClass("show");
+      }
+      return;
+    }
+
     const laptop = $("#interactive-laptop");
     if (isWithin(base, pwdHintCoords)) {
       laptop.addClass("cursor-pointer");
@@ -532,6 +557,13 @@ const santaOfficeClick = event => {
   const base = { offsetX, offsetY };
 
   if (currentCase === 2) {
+    if (santaLaptopLogin) {
+      if (isWithin(base, laptopCoords)) {
+        showInfo(caseTwoVaultTxt, "Vault.txt", "txt-file-laptop-glow");
+        return;
+      }
+    }
+
     const laptop = $("#interactive-laptop");
     if (isWithin(base, pwdHintCoords)) {
       showInfo("Santa's Favorite", "Password Hint");
@@ -555,7 +587,12 @@ const clickVault = () => {
 const unlockVault = () => {
   const password = document.getElementById("pwd-text").value;
 
-  const match = currentCase === 1 ? caseOneVaultPwd : caseTwoLaptopPwd;
+  const match =
+    currentCase === 1
+      ? caseOneVaultPwd
+      : santaLaptopLogin
+      ? caseTwoVaultTxt
+      : caseTwoLaptopPwd;
   if (password !== match) {
     $("#passwordError").removeClass("d-none");
     return;
@@ -577,8 +614,19 @@ const unlockVault = () => {
   }
 
   if (currentCase === 2) {
-    $("#vault-file-laptop").removeClass("d-none");
+    if (santaLaptopLogin) {
+      $("#txt-file-laptop").addClass("d-none");
+      $("#interactive-laptop").removeClass("d-none");
+      santaLaptopLogin = false;
+
+      $(santaOfficeAnchor).addClass("d-none");
+
+      setMeta(meta.FLAG);
+      $(flagAnchor).removeClass("d-none");
+    }
+    $("#txt-file-laptop").removeClass("d-none");
     $("#interactive-laptop").addClass("d-none");
+    santaLaptopLogin = true;
   }
 };
 
@@ -688,6 +736,8 @@ const openBook = () => {
     book.removeClass("show");
   }
 
-  $("#flag-text").text(atob("VEhNe0VaX2ZsQDYhfQ=="));
+  const flag =
+    currentCase === 1 ? "VEhNe0VaX2ZsQDYhfQ==" : "VEhNe20wQHJfNXQzcFNfbjB3IX0=";
+  $("#flag-text").text(atob(flag));
   flagModal.toggle();
 };

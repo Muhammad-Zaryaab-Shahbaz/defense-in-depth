@@ -25,11 +25,7 @@ const initCompound = () => {
 };
 
 const initSantaOffice = () => {
-  return makePromise(
-    santaOfficeAnchor,
-    "./santa_office.html",
-    () => (santaModal = initModal("santaModal"))
-  );
+  return makePromise(santaOfficeAnchor, "./santa_office.html");
 };
 
 const initDeerStable = () => {
@@ -58,6 +54,9 @@ $(function() {
   ]).then(() => {
     const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     [...tooltips].map(t => new bootstrap.Tooltip(t));
+
+    // TODO: Remove this
+    // $("#interactive-laptop").removeClass("d-none");
   });
 
   // TODO: Remove this

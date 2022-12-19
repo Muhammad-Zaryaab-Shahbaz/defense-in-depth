@@ -16,12 +16,14 @@ const homeButton = "#homeBtn";
 let isBookOpen = false;
 
 const caseOneVaultPwd = "S3cr3tV@ultPW";
+const caseTwoLaptopPwd = "MilkAndCookies";
 
-let santaModal, workshopModal;
+let workshopModal;
 const initModal = id => new bootstrap.Modal(document.getElementById(id), {});
 const flagModal = initModal("flag");
 const gameOverModal = initModal("gameOver");
 const infoModal = initModal("infoModal");
+const pwdModal = initModal("pwdModal");
 
 let targetTime;
 
@@ -218,6 +220,10 @@ const nextCase = () => {
   $("#flag-bg").removeClass("d-none");
   $("#open-book").addClass("d-none");
 
+  if (currentCase === 1) {
+    $("#interactive-laptop").removeClass("d-none");
+  }
+
   completeCase(currentCase);
   currentCase++;
   selectCase(currentCase);
@@ -232,6 +238,13 @@ const start = () => {
   $("#header").removeClass("d-none");
   setTitle("Perimeter: Essentially Free Entry");
   $(perimeterAnchor).removeClass("d-none");
+};
+
+const showInfo = (text, heading, anchor) => {
+  $("#info-title").html(heading);
+  $("#info-text").html(text);
+  infoModal.toggle();
+  $(`#${anchor}`).removeClass("show");
 };
 
 /*******************************************
@@ -294,14 +307,16 @@ const initGuardQuestions = () => {
 const setGuardMessage = (message = null, id = "guard-message") => {
   const guardMessage = $(`#${id}`);
   guardMessage.text(message || "");
-  const width = message ? guardMessage.closest(".chat-message").width() : 0;
+  const width = message
+    ? guardMessage.closest(".chat-message").width() - 70
+    : 0;
   guardMessage.width(`${width}px`);
 };
 
 const setUserMessage = (message = null) => {
   const userMessage = $("#user-message");
   userMessage.text(message);
-  const width = message ? userMessage.closest(".chat-message").width() : 0;
+  const width = message ? userMessage.closest(".chat-message").width() - 70 : 0;
   userMessage.width(`${width}px`);
 };
 
@@ -355,7 +370,7 @@ const clickGate = () => {
   $(compoundAnchor).removeClass("d-none");
 
   if (currentCase === 2) {
-    setTimer(7);
+    setTimer(3);
   }
 
   // reset state of the perimeter
@@ -440,6 +455,8 @@ const compoundClick = event => {
  * *****************************************
  */
 const vaultCoords = [52, 265, 83, 365];
+const pwdHintCoords = [403, 578, 169, 188];
+const pwdInputCoords = [403, 578, 205, 225];
 
 const santaOfficeMouseover = event => {
   const { offsetX, offsetY } = event;
@@ -452,29 +469,70 @@ const santaOfficeMouseover = event => {
   } else if (vault.hasClass("show")) {
     vault.removeClass("show");
   }
+
+  if (currentCase === 2) {
+    const laptop = $("#interactive-laptop");
+    if (isWithin(base, pwdHintCoords)) {
+      laptop.addClass("cursor-pointer");
+    } else if (isWithin(base, pwdInputCoords)) {
+      laptop.addClass("cursor-pointer");
+    } else if (laptop.hasClass("cursor-pointer")) {
+      laptop.removeClass("cursor-pointer");
+    }
+  }
+};
+
+const santaOfficeClick = event => {
+  const { offsetX, offsetY } = event;
+  const base = { offsetX, offsetY };
+
+  if (currentCase === 2) {
+    const laptop = $("#interactive-laptop");
+    if (isWithin(base, pwdHintCoords)) {
+      showInfo("Santa's Favorite", "Password Hint");
+    } else if (isWithin(base, pwdInputCoords)) {
+      $("#pwd-modal-title").text("Laptop Password");
+      pwdModal.toggle();
+    }
+
+    if (laptop.hasClass("cursor-pointer")) {
+      laptop.removeClass("cursor-pointer");
+    }
+  }
 };
 
 const clickVault = () => {
   // modal with textbox and unlock button
-  santaModal.toggle();
+  $("#pwd-modal-title").text("Vault");
+  pwdModal.toggle();
 };
 
 const unlockVault = () => {
-  const password = document.getElementById("vaultPwd").value;
-  if (password !== caseOneVaultPwd) {
-    $("#vaultPasswordError").removeClass("d-none");
+  const password = document.getElementById("pwd-text").value;
+
+  const match = currentCase === 1 ? caseOneVaultPwd : caseTwoLaptopPwd;
+  if (password !== match) {
+    $("#passwordError").removeClass("d-none");
     return;
   }
 
-  // display flag
-  $("#vaultPasswordError").addClass("d-none");
-  santaModal.toggle();
+  // remove error warning and hide modal
+  $("#passwordError").addClass("d-none");
+  pwdModal.toggle();
 
-  // navigate to the flag screen
-  $(santaOfficeAnchor).addClass("d-none");
+  if (currentCase === 1) {
+    // navigate to the flag screen
+    $(santaOfficeAnchor).addClass("d-none");
 
-  setTitle("Flag");
-  $(flagAnchor).removeClass("d-none");
+    setTitle("Flag");
+    $(flagAnchor).removeClass("d-none");
+    return;
+  }
+
+  if (currentCase === 2) {
+    $("#vault-file-laptop").removeClass("d-none");
+    $("#interactive-laptop").addClass("d-none");
+  }
 };
 
 /*******************************************
@@ -502,14 +560,14 @@ const eaOfficeMouseover = event => {
     return;
   }
 
-  const drawer = $("#drawer");
-  if (isWithin(base, drawerCoords)) {
-    drawer.addClass("show");
-  } else if (drawer.hasClass("show")) {
-    drawer.removeClass("show");
-  }
-
-  if (currentCase === 2) {
+  if (currentCase === 1) {
+    const drawer = $("#drawer");
+    if (isWithin(base, drawerCoords)) {
+      drawer.addClass("show");
+    } else if (drawer.hasClass("show")) {
+      drawer.removeClass("show");
+    }
+  } else if (currentCase === 2) {
     const postItNote = $("#postItNote");
     if (isWithin(base, postItNoteCoords)) {
       postItNote.addClass("show");
@@ -535,17 +593,11 @@ const openDrawer = () => {
 };
 
 const seeNotes = () => {
-  $("#info-title").html("Post-it Notes");
-  $("#info-text").html("Prepare: MilkAndCookies");
-  infoModal.toggle();
-  $("#envelope").removeClass("show");
+  showInfo("Prepare: MilkAndCookies", "Post-it Notes", "postItNote");
 };
 
 const clickEnvelope = () => {
-  $("#info-title").html("Santa's Vault Password");
-  $("#info-text").html(caseOneVaultPwd);
-  infoModal.toggle();
-  $("#envelope").removeClass("show");
+  showInfo(caseOneVaultPwd, "Santa's Vault Password", "envelope");
 };
 
 /*******************************************

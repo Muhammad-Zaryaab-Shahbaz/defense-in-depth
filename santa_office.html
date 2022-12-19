@@ -3,6 +3,7 @@
     <div
       class="playground position-relative mx-auto"
       onmousemove="santaOfficeMouseover(event)"
+      onclick="santaOfficeClick(event)"
     >
       <img
         id="santaOffice"
@@ -10,49 +11,21 @@
         src="images/Santa Office/Desk.png"
       />
       <img
+        id="interactive-laptop"
+        class="position-absolute overlay w-100 show d-none"
+        src="images/Santa Office/Interactive laptop screen.png"
+      />
+      <img
+        id="vault-file-laptop"
+        class="position-absolute overlay w-100 show d-none"
+        src="images/Santa Office/Interactive vault .txt.png"
+      />
+      <img
         id="vault"
         onclick="clickVault()"
         class="position-absolute cursor-pointer overlay w-100"
         src="images/Santa Office/Glowing vault.png"
       />
-    </div>
-  </div>
-</div>
-<div
-  class="modal fade"
-  id="santaModal"
-  aria-hidden="true"
-  aria-labelledby="modalLabel"
-  tabindex="-1"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Vault</h5>
-        <button
-          type="button"
-          class="btn-close btn-close-white"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <input
-          id="vaultPwd"
-          onkeyup="checkEnter(event, () => unlockVault())"
-          class="form-control"
-          placeholder="Password"
-        />
-        <small id="vaultPasswordError" class="text-danger fw-bold d-none"
-          >Invalid Password</small
-        >
-        <button
-          class="neutral btn mt-2 w-100 text-white"
-          onclick="unlockVault()"
-        >
-          Unlock
-        </button>
-      </div>
     </div>
   </div>
 </div>

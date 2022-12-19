@@ -58,17 +58,18 @@
       aria-hidden="true"
       aria-labelledby="modalLabel"
       tabindex="-1"
+      data-bs-backdrop="static"
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="modalLabel">Flag</h5>
-            <button
+            <!-- <button
               type="button"
               class="btn-close btn-close-white"
               data-bs-dismiss="modal"
               aria-label="Close"
-            ></button>
+            ></button> -->
           </div>
           <div class="modal-body">
             <div
@@ -86,6 +87,34 @@
               onclick="nextCase()"
             >
               Next Case
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="gameOver"
+      aria-hidden="true"
+      aria-labelledby="modalLabel"
+      tabindex="-1"
+      data-bs-backdrop="static"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Game Over</h5>
+          </div>
+          <div class="modal-body">
+            <p class="fw-bold text-center mb-0"></p>
+            The guards have noticed that you’ve been gone a while and when they
+            started to investigate, they saw you snooping around the compound.
+            Game over!
+            <button
+              class="neutral btn mt-2 w-100 text-white"
+              onclick="window.location.reload()"
+            >
+              Restart
             </button>
           </div>
         </div>
@@ -132,7 +161,15 @@
                   </button>
                 </div>
                 <div class="col-md-4">
-                  <div id="timer"></div>
+                  <div
+                    id="clock"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="Time Remaining"
+                    class="d-flex align-items-center justify-content-center mb-3 d-none"
+                  >
+                    <i class="fas fa-clock me-2 fa-lg"></i>
+                    <h3 id="time" class="mb-0 fw-bold">00:00</h3>
+                  </div>
                 </div>
                 <div class="col-md-4">
                   <p class="mb-0 text-end d-none">

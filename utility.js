@@ -13,11 +13,16 @@ const flagAnchor = "#flagAnchor";
 
 const homeButton = "#homeBtn";
 
+let isBookOpen = false;
+
 const caseOneVaultPwd = "S3cr3tV@ultPW";
 
 let santaModal, workshopModal, vaultPwdModal;
 const initModal = id => new bootstrap.Modal(document.getElementById(id), {});
 let flagModal = initModal("flag");
+let gameOverModal = initModal("gameOver");
+
+let targetTime;
 
 let currentCase = -1;
 let progress = 0;
@@ -26,6 +31,39 @@ const cases = [
   "Prevention Focused",
   "Disrupting Adversarial Objectives",
 ];
+
+const setTimer = minutes => {
+  $("#clock").removeClass("d-none");
+
+  // const increment = minutes * 1000 * 60;
+  const increment = 1000 * 6;
+  targetTime = new Date(new Date().getTime() + increment).getTime();
+
+  // Update the count down every 1 second
+  const timerInterval = setInterval(function() {
+    // Get today's date and time
+    const now = new Date().getTime();
+
+    // Find the distance between now and the count down date
+    const distance = targetTime - now;
+
+    // Time calculations for days, hours, minutes and seconds
+    let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    minutes = minutes.toString().padStart(2, "0");
+    let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    seconds = seconds.toString().padStart(2, "0");
+
+    // If the count down is finished, write some text
+    if (distance < 0) {
+      clearInterval(timerInterval);
+      document.getElementById("time").innerHTML = "Game Over";
+      gameOverModal.toggle();
+      setTimeout(() => window.location.reload(), 10000);
+    } else {
+      document.getElementById("time").innerHTML = `${minutes}:${seconds}`;
+    }
+  }, 1000);
+};
 
 const setTitle = title => $("#title").text(title);
 
@@ -62,6 +100,15 @@ const updateProgress = num => {
   $(_progress).html(`${percent}%`);
 };
 
+const closeDrawer = () => {
+  isDrawerOpen = false;
+  // update headings
+  $("#drawer-heading").addClass("d-none");
+
+  $("#ea-office-bg").removeClass("d-none");
+  $("#open-drawer").addClass("d-none");
+};
+
 const goHome = () => {
   $(homeButton).addClass("d-none");
 
@@ -74,6 +121,7 @@ const goHome = () => {
 
   setTitle("Compound");
   $(compoundAnchor).removeClass("d-none");
+  closeDrawer();
 };
 
 const isWithin = (event, coords) => {
@@ -164,6 +212,11 @@ const completeCase = num => {
 const nextCase = () => {
   flagModal.toggle();
   $("#flag-text").text("");
+
+  isBookOpen = false;
+  // update images
+  $("#flag-bg").removeClass("d-none");
+  $("#open-book").addClass("d-none");
 
   completeCase(currentCase);
   currentCase++;
@@ -301,6 +354,10 @@ const clickGate = () => {
   setTitle("Compound");
   $(compoundAnchor).removeClass("d-none");
 
+  if (currentCase === 2) {
+    setTimer(7);
+  }
+
   // reset state of the perimeter
   $("#conversation").addClass("d-none");
   setGuardMessage();
@@ -309,6 +366,7 @@ const clickGate = () => {
   allowPerimeter = false;
   answered = false;
   $("#hint").addClass("d-none");
+  document.getElementById("title").scrollIntoView();
 };
 
 /*******************************************
@@ -466,18 +524,10 @@ const openDrawer = () => {
   }
 };
 
-const closeDrawer = () => {
-  isDrawerOpen = false;
-  // update headings
-  $("#drawer-heading").addClass("d-none");
-
-  $("#ea-office-bg").removeClass("d-none");
-  $("#open-drawer").addClass("d-none");
-};
-
 const clickEnvelope = () => {
   $("#vault-pwd").html(caseOneVaultPwd);
   vaultPwdModal.toggle();
+  $("#envelope").removeClass("show");
 };
 
 /*******************************************
@@ -487,7 +537,6 @@ const clickEnvelope = () => {
  * *****************************************
  */
 const bookCoords = [426, 594, 88, 336];
-let isBookOpen = false;
 
 const flagMouseover = event => {
   const { offsetX, offsetY } = event;

@@ -17,11 +17,7 @@ const initPerimeter = () => {
 };
 
 const initCompound = () => {
-  return makePromise(
-    compoundAnchor,
-    "./compound.html",
-    () => (workshopModal = initModal("workshop-status"))
-  );
+  return makePromise(compoundAnchor, "./compound.html");
 };
 
 const initSantaOffice = () => {

@@ -11,6 +11,37 @@ const deerAnchor = "#deerAnchor";
 const eaOfficeAnchor = "#eaOfficeAnchor";
 const flagAnchor = "#flagAnchor";
 
+const meta = {
+  COMPOUND: {
+    title: "Compound",
+    description: "Click on a building to visit it.",
+  },
+  PERIMETER_ONE: {
+    title: "Perimeter: Essentially Free Entry",
+    description: "Interact with items that highlight on hover.",
+  },
+  PERIMETER: {
+    title: "Perimeter",
+    description: "Interact with items that highlight on hover.",
+  },
+  SANTA_OFFICE: {
+    title: "Santa Office",
+    description: "Interact with items that highlight on hover.",
+  },
+  DEER_STABLE: {
+    title: "Deer Stable",
+    description: "Nothing to see here at this time.",
+  },
+  EA_OFFICE: {
+    title: "Santa's Executive Assistant (EA) Office",
+    description: "Interact with items that highlight on hover.",
+  },
+  FLAG: {
+    title: "Flag",
+    description: "Interact with items that highlight on hover.",
+  },
+};
+
 const homeButton = "#homeBtn";
 
 let isBookOpen = false;
@@ -18,12 +49,12 @@ let isBookOpen = false;
 const caseOneVaultPwd = "S3cr3tV@ultPW";
 const caseTwoLaptopPwd = "MilkAndCookies";
 
-let workshopModal;
 const initModal = id => new bootstrap.Modal(document.getElementById(id), {});
 const flagModal = initModal("flag");
 const gameOverModal = initModal("gameOver");
 const infoModal = initModal("infoModal");
 const pwdModal = initModal("pwdModal");
+const warningModal = initModal("warningModal");
 
 let targetTime;
 
@@ -67,7 +98,10 @@ const setTimer = minutes => {
   }, 1000);
 };
 
-const setTitle = title => $("#title").text(title);
+const setMeta = ({ title, description }) => {
+  $("#title").text(title);
+  $("#description").text(description);
+};
 
 const showCases = () => {
   let content = `<div class="row">`;
@@ -121,7 +155,7 @@ const goHome = () => {
   $(eaOfficeAnchor).addClass("d-none");
   $(flagAnchor).addClass("d-none");
 
-  setTitle("Compound");
+  setMeta(meta.COMPOUND);
   $(compoundAnchor).removeClass("d-none");
   closeDrawer();
 };
@@ -160,7 +194,7 @@ const resetGame = () => {
   goHome();
   $(compoundAnchor).addClass("d-none");
 
-  setTitle("Perimeter");
+  setMeta(meta.PERIMETER);
   $(perimeterAnchor).removeClass("d-none");
 };
 
@@ -236,7 +270,7 @@ const start = () => {
   $(homeAnchor).addClass("d-none");
 
   $("#header").removeClass("d-none");
-  setTitle("Perimeter: Essentially Free Entry");
+  setMeta(meta.PERIMETER_ONE);
   $(perimeterAnchor).removeClass("d-none");
 };
 
@@ -244,7 +278,13 @@ const showInfo = (text, heading, anchor) => {
   $("#info-title").html(heading);
   $("#info-text").html(text);
   infoModal.toggle();
-  $(`#${anchor}`).removeClass("show");
+  if (anchor) $(`#${anchor}`).removeClass("show");
+};
+
+const showWarning = (text, heading) => {
+  $("#warning-title").html(heading);
+  $("#warning-text").html(text);
+  warningModal.toggle();
 };
 
 /*******************************************
@@ -266,6 +306,11 @@ const guardQuestions = [
   "Visit deer stable",
   "Delivery for Santa's EA",
   "Meet my friends",
+];
+const phrases = [
+  "I have to visit deer stable.",
+  "I have a delivery for Santa's Executive Assistant.",
+  "I have to meet my friends.",
 ];
 const correctAnswer = 1;
 
@@ -299,7 +344,7 @@ const initGuardQuestions = () => {
       </div>`
     )
     .join("");
-  const content = `<p class="mb-1">Choose an answer.</p><div class="row">${questions}</div>`;
+  const content = `<p class="mb-1">Choose the best excuse for the guard to let you through the gate.</p><div class="row">${questions}</div>`;
   $("#guard-questions").html(content);
   $("#guard-questions").removeClass("d-none");
 };
@@ -324,14 +369,14 @@ const answerGuard = index => {
   if (answered) return;
 
   $(".guard-answer").removeClass("text-bg-danger");
-  if (index !== correctAnswer) {
+  if (currentCase > 1 && index !== correctAnswer) {
     $(`#guard-answer-${index}`).addClass("text-bg-danger");
     return;
   }
 
   $(`#guard-answer-${index}`).addClass("text-bg-success");
   $("#user-reply").removeClass("d-none");
-  setUserMessage("I have a delivery for Santa's EA");
+  setUserMessage(phrases[index]);
   $("#guard-reply").removeClass("d-none");
   setGuardMessage(
     "Okay! let me log your details quickly so you can go on your merry way.",
@@ -347,26 +392,25 @@ const clickGuard = () => {
   if (allowPerimeter) return;
 
   $("#conversation").removeClass("d-none");
-  if (currentCase === 1) {
-    setGuardMessage("Hey there!");
-    setUserMessage("I'm a messenger for the EA.");
 
-    allowPerimeter = true;
-    $("#hint").removeClass("d-none");
-  } else if (currentCase === 2) {
-    setGuardMessage("Hey there! What is your purpose of the visit?");
-    initGuardQuestions();
-    $("#user-reply").addClass("d-none");
-  }
+  setGuardMessage("Hey there! What is your purpose of the visit?");
+  initGuardQuestions();
+  $("#user-reply").addClass("d-none");
 
   document.getElementById("conversation").scrollIntoView();
 };
 
 const clickGate = () => {
-  if (!allowPerimeter) return;
+  if (!allowPerimeter) {
+    showWarning(
+      "The gate is closed. Talk to the guard to let you through.",
+      "Warning"
+    );
+    return;
+  }
 
   $(perimeterAnchor).addClass("d-none");
-  setTitle("Compound");
+  setMeta(meta.COMPOUND);
   $(compoundAnchor).removeClass("d-none");
 
   if (currentCase === 2) {
@@ -376,8 +420,9 @@ const clickGate = () => {
   // reset state of the perimeter
   $("#conversation").addClass("d-none");
   setGuardMessage();
-
   setUserMessage();
+  setGuardMessage(null, "guard-reply-message");
+
   allowPerimeter = false;
   answered = false;
   $("#hint").addClass("d-none");
@@ -420,30 +465,30 @@ const compoundClick = event => {
 
   if (isWithin(base, workshopCoords)) {
     if (currentCase === 1) {
-      $("#workshop-notice").html("Workshop is closed at this moment.");
+      showWarning("Workshop is closed at this moment.", "Workshop");
     } else if (currentCase === 2) {
-      $("#workshop-notice").html(
-        "Workshop is closed at this moment. Someone noticed you snooping around but decided not to tell anyone about it."
+      showWarning(
+        "Workshop is closed at this moment. Someone noticed you snooping around but decided not to tell anyone about it.",
+        "Workshop"
       );
     }
-    workshopModal.toggle();
   } else if (isWithin(base, officeCoords)) {
     $(homeButton).removeClass("d-none");
     $(compoundAnchor).addClass("d-none");
 
-    setTitle("Santa Office");
+    setMeta(meta.SANTA_OFFICE);
     $(santaOfficeAnchor).removeClass("d-none");
   } else if (isWithin(base, stableCoords)) {
     $(homeButton).removeClass("d-none");
     $(compoundAnchor).addClass("d-none");
 
-    setTitle("Deer stable");
+    setMeta(meta.DEER_STABLE);
     $(deerAnchor).removeClass("d-none");
   } else if (isWithin(base, EAOfficeCoords)) {
     $(homeButton).removeClass("d-none");
     $(compoundAnchor).addClass("d-none");
 
-    setTitle("Santa's EA Office");
+    setMeta(meta.EA_OFFICE);
     $(eaOfficeAnchor).removeClass("d-none");
   }
 };
@@ -514,6 +559,8 @@ const unlockVault = () => {
   if (password !== match) {
     $("#passwordError").removeClass("d-none");
     return;
+  } else {
+    $("#pwd-text").val("");
   }
 
   // remove error warning and hide modal
@@ -524,7 +571,7 @@ const unlockVault = () => {
     // navigate to the flag screen
     $(santaOfficeAnchor).addClass("d-none");
 
-    setTitle("Flag");
+    setMeta(meta.FLAG);
     $(flagAnchor).removeClass("d-none");
     return;
   }

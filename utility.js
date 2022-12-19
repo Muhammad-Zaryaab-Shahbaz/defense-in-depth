@@ -225,7 +225,7 @@ const nextCase = () => {
 };
 
 const start = () => {
-  currentCase = 2;
+  currentCase = 1;
   selectCase(currentCase);
   $(homeAnchor).addClass("d-none");
 
@@ -491,8 +491,6 @@ let isDrawerOpen = false;
 const eaOfficeMouseover = event => {
   const { offsetX, offsetY } = event;
   const base = { offsetX, offsetY };
-
-  // console.log(base);
 
   if (isDrawerOpen) {
     const envelope = $("#envelope");

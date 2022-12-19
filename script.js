@@ -37,11 +37,7 @@ const initDeerStable = () => {
 };
 
 const initEAOffice = () => {
-  return makePromise(
-    eaOfficeAnchor,
-    "./ea_office.html",
-    () => (vaultPwdModal = initModal("vaultPwdModal"))
-  );
+  return makePromise(eaOfficeAnchor, "./ea_office.html");
 };
 
 const initFlag = () => {

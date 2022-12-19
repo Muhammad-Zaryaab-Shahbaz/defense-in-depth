@@ -120,6 +120,39 @@
         </div>
       </div>
     </div>
+    <div
+      class="modal fade"
+      id="infoModal"
+      aria-hidden="true"
+      aria-labelledby="info-title"
+      tabindex="-1"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="info-title"></h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div
+              class="d-flex align-items-center justify-content-between cursor-pointer mb-2"
+              data-bs-toggle="tooltip"
+              data-bs-title="Copy to clipboard"
+              onclick="copyText('info-text', 'info-text-container')"
+              id="info-text-container"
+            >
+              <p id="info-text" class="fw-bold text-center mb-0"></p>
+              <i class="fas fa-copy"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="container-fluid py-4">
       <div class="row">
         <div class="col-md-12">

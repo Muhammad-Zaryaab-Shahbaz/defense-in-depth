@@ -17,10 +17,11 @@ let isBookOpen = false;
 
 const caseOneVaultPwd = "S3cr3tV@ultPW";
 
-let santaModal, workshopModal, vaultPwdModal;
+let santaModal, workshopModal;
 const initModal = id => new bootstrap.Modal(document.getElementById(id), {});
-let flagModal = initModal("flag");
-let gameOverModal = initModal("gameOver");
+const flagModal = initModal("flag");
+const gameOverModal = initModal("gameOver");
+const infoModal = initModal("infoModal");
 
 let targetTime;
 
@@ -35,8 +36,7 @@ const cases = [
 const setTimer = minutes => {
   $("#clock").removeClass("d-none");
 
-  // const increment = minutes * 1000 * 60;
-  const increment = 1000 * 6;
+  const increment = minutes * 1000 * 60;
   targetTime = new Date(new Date().getTime() + increment).getTime();
 
   // Update the count down every 1 second
@@ -225,7 +225,7 @@ const nextCase = () => {
 };
 
 const start = () => {
-  currentCase = 1;
+  currentCase = 2;
   selectCase(currentCase);
   $(homeAnchor).addClass("d-none");
 
@@ -485,11 +485,14 @@ const unlockVault = () => {
  */
 const drawerCoords = [117, 266, 220, 273];
 const envelopeCoords = [255, 410, 129, 190];
+const postItNoteCoords = [478, 509, 120, 160];
 let isDrawerOpen = false;
 
 const eaOfficeMouseover = event => {
   const { offsetX, offsetY } = event;
   const base = { offsetX, offsetY };
+
+  // console.log(base);
 
   if (isDrawerOpen) {
     const envelope = $("#envelope");
@@ -506,6 +509,15 @@ const eaOfficeMouseover = event => {
     drawer.addClass("show");
   } else if (drawer.hasClass("show")) {
     drawer.removeClass("show");
+  }
+
+  if (currentCase === 2) {
+    const postItNote = $("#postItNote");
+    if (isWithin(base, postItNoteCoords)) {
+      postItNote.addClass("show");
+    } else if (postItNote.hasClass("show")) {
+      postItNote.removeClass("show");
+    }
   }
 };
 
@@ -524,9 +536,17 @@ const openDrawer = () => {
   }
 };
 
+const seeNotes = () => {
+  $("#info-title").html("Post-it Notes");
+  $("#info-text").html("Prepare: MilkAndCookies");
+  infoModal.toggle();
+  $("#envelope").removeClass("show");
+};
+
 const clickEnvelope = () => {
-  $("#vault-pwd").html(caseOneVaultPwd);
-  vaultPwdModal.toggle();
+  $("#info-title").html("Santa's Vault Password");
+  $("#info-text").html(caseOneVaultPwd);
+  infoModal.toggle();
   $("#envelope").removeClass("show");
 };
 

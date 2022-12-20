@@ -60,7 +60,8 @@ const homeButton = "#homeBtn";
 let isBookOpen = false,
   isVaultOpen = false,
   isDoorOpen = false,
-  isDrawerOpen = false;
+  isDrawerOpen = false,
+  isLaptopOpen = false;
 let activeScreen = 0;
 
 const caseOneVaultPwd = "S3cr3tV@ultPW";
@@ -72,6 +73,8 @@ const caseThreeEALaptopPwd = "1";
 const caseThreeSantaLaptopPwd = "2";
 // const caseThreeVaultTxt = "N3w4nd1m";
 const caseThreeVaultTxt = "3";
+const caseThreeVaultText2 = "Pr0v3dV@ultPW";
+const caseThreeOldPwd = "H0tCh0coL@t3_01";
 // const caseThreeVaultPwd = "N3w4nd1mPr0v3dV@ultPW";
 const caseThreeVaultPwd = "4";
 const santaCode = "2845";
@@ -176,13 +179,14 @@ const updateProgress = num => {
 
 const backToOffice = () => {
   isDrawerOpen = false;
-  eaLaptopLogin = false;
+  isLaptopOpen = false;
 
   // update headings
   $("#secondary-header").addClass("d-none");
 
   $("#ea-office-bg").removeClass("d-none");
   $("#open-drawer").addClass("d-none");
+  $("#open-laptop").addClass("d-none");
 };
 
 const goHome = () => {
@@ -341,6 +345,9 @@ const nextCase = () => {
 
   if (currentCase === 1) {
     $("#interactive-laptop").removeClass("d-none");
+  } else if (currentCase === 2) {
+    $("#txt-file-laptop").addClass("d-none");
+    $("#interactive-laptop").removeClass("d-none");
   }
 
   completeCase(currentCase);
@@ -497,7 +504,7 @@ const answerGuard = index => {
   $("#guard-reply").removeClass("d-none");
 
   let guardReply =
-    "Okay! let me log your details quickly so you can go on your merry way.";
+    "Okay! Let me log your details quickly so you can go on your merry way.";
   if (currentCase === 3) {
     guardReply +=
       "<br/>You have been given an <b>EA Pass</b>. You can only go to Executive Assistance Office, right?";
@@ -555,7 +562,7 @@ const clickGate = () => {
   if (currentCase === 2) {
     setTimer(3);
   } else if (currentCase === 3) {
-    setTimer(4);
+    setTimer(3);
     $("#passes").removeClass("d-none");
     toggleEAPass();
     $("#strikes").removeClass("d-none");
@@ -832,11 +839,21 @@ const unlockVault = () => {
         return;
       } */
 
+      // update headings
       $("#secondary-heading").text("Executive Assistant Laptop");
       $("#secondary-header").removeClass("d-none");
+
       eaLaptopLogin = true;
-      /* $("#txt-file-laptop").removeClass("d-none");
-      $("#interactive-laptop").addClass("d-none"); */
+      isLaptopOpen = true;
+
+      const laptop = $("#eaOfficeLaptop");
+
+      // update images
+      $("#ea-office-bg").addClass("d-none");
+      $("#open-laptop").removeClass("d-none");
+      if (laptop.hasClass("show")) {
+        laptop.removeClass("show");
+      }
     }
 
     if (activeScreen === meta.SANTA_OFFICE.id) {
@@ -882,12 +899,12 @@ const eaLaptopCoords = [
   { x: [323, 426], y: [64, 127] },
   { x: [304, 445], y: [127, 156] },
 ];
+const eaFileCoords = [455, 505, 76, 132];
+const eaTrashCoords = [460, 502, 208, 253];
 
 const eaOfficeMouseover = event => {
   const { offsetX, offsetY } = event;
   const base = { offsetX, offsetY };
-
-  // console.log(base);
 
   if (isDrawerOpen) {
     const envelope = $("#envelope");
@@ -904,6 +921,23 @@ const eaOfficeMouseover = event => {
       } else if (santaCard.hasClass("show")) {
         santaCard.removeClass("show");
       }
+    }
+    return;
+  }
+
+  if (isLaptopOpen) {
+    const file = $("#ea-laptop-file");
+    if (isWithin(base, eaFileCoords)) {
+      file.addClass("show");
+    } else if (file.hasClass("show")) {
+      file.removeClass("show");
+    }
+
+    const trash = $("#ea-laptop-trash");
+    if (isWithin(base, eaTrashCoords)) {
+      trash.addClass("show");
+    } else if (trash.hasClass("show")) {
+      trash.removeClass("show");
     }
     return;
   }
@@ -965,6 +999,14 @@ const seeNotes = () => {
     </ul>`;
     showInfo("Reminders:", "Post-it Notes", "postItNote", true, extraText);
   }
+};
+
+const clickEAFile = () => {
+  showInfo(caseThreeVaultText2, "Vault (2/2).txt", "ea-laptop-file");
+};
+
+const clickTrash = () => {
+  showInfo(caseThreeOldPwd, "OldPW.txt", "ea-laptop-trash");
 };
 
 const clickEnvelope = () => {

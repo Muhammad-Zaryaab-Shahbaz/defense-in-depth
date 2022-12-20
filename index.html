@@ -147,8 +147,9 @@
               id="info-text-container"
             >
               <p id="info-text" class="fw-bold text-center mb-0"></p>
-              <i class="fas fa-copy"></i>
+              <i id="info-modal-copy" class="fas fa-copy"></i>
             </div>
+            <div id="info-extra-text"></div>
           </div>
         </div>
       </div>
@@ -274,9 +275,45 @@
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <p class="mb-0 text-end d-none">
-                    Progress: <span id="puzzle-progress">--</span>
-                  </p>
+                  <div
+                    id="passes"
+                    class="d-flex align-items-center justify-content-center mb-3 d-none"
+                  >
+                    <i
+                      class="fas fa-id-card me-2 fa-3x"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Passes give you Access"
+                    ></i>
+                    <img
+                      id="ea-pass"
+                      class="me-2 d-none"
+                      src="images/EA ID card.png"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="EA Pass: Access to EA Office, Deer Stable"
+                      alt="EA Pass"
+                    />
+                    <img
+                      id="santa-pass"
+                      class="d-none"
+                      src="images/Santa ID card.png"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Santa Pass: Access to Santa Office, Workshop"
+                      alt="Santa Pass"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-4 pb-3 mx-auto d-none" id="strikes">
+                  <div
+                    class="d-flex align-items-center justify-content-center"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="Each wrong interaction will subtract 45s and give you 1 strike"
+                  >
+                    <h3 id="time" class="mb-0 fw-bold me-2">Strikes:</h3>
+                    <i id="strike-1" class="fas fa-times me-2 fa-2x"></i>
+                    <i id="strike-2" class="fas fa-times me-2 fa-2x"></i>
+                    <i id="strike-3" class="fas fa-times me-2 fa-2x"></i>
+                    <small>(<span id="strike-info">0</span>/3)</small>
+                  </div>
                 </div>
               </div>
             </div>

@@ -1,12 +1,12 @@
 <div class="row">
   <div class="col-md-12">
     <h2
-      id="drawer-heading"
-      onclick="closeDrawer()"
+      id="secondary-header"
+      onclick="backToOffice()"
       class="text-center my-2 d-flex align-items-center justify-content-center cursor-pointer d-none"
     >
       <i class="fas fa-xs fa-angle-left"></i>
-      <span class="d-block mb-1">&nbsp;Drawer</span>
+      <span id="secondary-heading" class="d-block mb-1">&nbsp;Drawer</span>
     </h2>
   </div>
   <div class="col-md-12">
@@ -32,15 +32,37 @@
         src="images/EA Office/Glowing post-it note.png"
       />
       <img
+        id="eaOfficeLaptop"
+        onclick="eaOfficeLaptopClick(event)"
+        class="position-absolute cursor-pointer overlay w-100"
+        src="images/EA Office/Glowing laptop - password hint.png"
+      />
+      <img
         id="open-drawer"
         class="playground-bg w-100 d-none"
         src="images/EA Office/Draw - not glowing.png"
       />
+      <!-- <img
+        id="ea-laptop-file"
+        class="playground-bg w-100 d-none"
+        src="images/EA Office/Laptop screen - file folder.png"
+      />
+      <img
+        id="ea-laptop-trash"
+        class="position-absolute overlay w-100 show d-none"
+        src="images/EA Office/Laptop screen - trash can.png"
+      /> -->
       <img
         id="envelope"
         onclick="clickEnvelope()"
         class="position-absolute cursor-pointer overlay w-100"
         src="images/EA Office/Draw - glowing envelope.png"
+      />
+      <img
+        id="santa-card"
+        onclick="clickSantaCard()"
+        class="position-absolute cursor-pointer overlay w-100"
+        src="images/EA Office/Draw - glowing ID.png"
       />
     </div>
   </div>

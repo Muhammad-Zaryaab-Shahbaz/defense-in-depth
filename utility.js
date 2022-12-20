@@ -49,6 +49,8 @@ let isBookOpen = false;
 const caseOneVaultPwd = "S3cr3tV@ultPW";
 const caseTwoLaptopPwd = "MilkAndCookies";
 const caseTwoVaultTxt = "3XtrR@_S3cr3tV@ultPW";
+// const caseThreeEALaptopPwd = "BanoffeePie";
+const caseThreeEALaptopPwd = "1";
 
 const initModal = id => new bootstrap.Modal(document.getElementById(id), {});
 const flagModal = initModal("flag");
@@ -61,11 +63,24 @@ let targetTime, timerInterval;
 
 let currentCase = -1;
 let progress = 0;
+let strikes = 0;
+let eaLaptopPasswordAttempts = 0;
+let eaPass = false;
+let santaPass = false;
+const disabledCopy = {};
+
 const cases = [
   "Perimeter Focused",
   "Prevention Focused",
   "Disrupting Adversarial Objectives",
 ];
+
+const gameOver = () => {
+  clearInterval(timerInterval);
+  document.getElementById("time").innerHTML = "Game Over";
+  gameOverModal.toggle();
+  setTimeout(() => window.location.reload(), 10000);
+};
 
 const setTimer = minutes => {
   $("#clock").removeClass("d-none");
@@ -89,10 +104,7 @@ const setTimer = minutes => {
 
     // If the count down is finished, write some text
     if (distance < 0) {
-      clearInterval(timerInterval);
-      document.getElementById("time").innerHTML = "Game Over";
-      gameOverModal.toggle();
-      setTimeout(() => window.location.reload(), 10000);
+      gameOver();
     } else {
       document.getElementById("time").innerHTML = `${minutes}:${seconds}`;
     }
@@ -137,10 +149,12 @@ const updateProgress = num => {
   $(_progress).html(`${percent}%`);
 };
 
-const closeDrawer = () => {
+const backToOffice = () => {
   isDrawerOpen = false;
+  eaLaptopLogin = false;
+
   // update headings
-  $("#drawer-heading").addClass("d-none");
+  $("#secondary-header").addClass("d-none");
 
   $("#ea-office-bg").removeClass("d-none");
   $("#open-drawer").addClass("d-none");
@@ -158,7 +172,7 @@ const goHome = () => {
 
   setMeta(meta.COMPOUND);
   $(compoundAnchor).removeClass("d-none");
-  closeDrawer();
+  backToOffice();
 };
 
 const isWithin = (event, coords) => {
@@ -212,6 +226,7 @@ const checkEnter = (event, fn) => {
 };
 
 const copyText = (label = "flag-text", container = "flag-container") => {
+  if (disabledCopy[label]) return;
   const text = $(`#${label}`).text();
   navigator.clipboard.writeText(text);
 
@@ -220,6 +235,38 @@ const copyText = (label = "flag-text", container = "flag-container") => {
   setTimeout(() => {
     tooltip.setContent({ ".tooltip-inner": "Copy to clipboard" });
   }, 2000);
+};
+
+const toggleEAPass = (val = true) => {
+  eaPass = val;
+  if (val) {
+    $("#ea-pass").removeClass("d-none");
+  } else {
+    $("#ea-pass").removeClass("d-none");
+  }
+};
+
+const toggleSantaPass = (val = true) => {
+  santaPass = val;
+  if (val) {
+    $("#santa-pass").removeClass("d-none");
+  } else {
+    $("#santa-pass").removeClass("d-none");
+  }
+};
+
+const addStrike = () => {
+  strikes++;
+  if (strikes > 3) {
+    gameOver();
+    return false;
+  }
+
+  targetTime = targetTime - 45000;
+  $(`#strike-${strikes}`).addClass("text-danger");
+  $("#strike-info").html(strikes);
+  showWarning("Watch Out! Security has noted this activity.", "Strike");
+  return true;
 };
 
 /*******************************************
@@ -281,11 +328,31 @@ const start = () => {
   $(perimeterAnchor).removeClass("d-none");
 };
 
-const showInfo = (text, heading, anchor) => {
+const showInfo = (
+  text,
+  heading,
+  anchor,
+  disableCopy = false,
+  extraText = null
+) => {
   $("#info-title").html(heading);
   $("#info-text").html(text);
   infoModal.toggle();
   if (anchor) $(`#${anchor}`).removeClass("show");
+  disabledCopy["info-text"] = disableCopy;
+  if (disableCopy) {
+    $("#info-modal-copy").addClass("d-none");
+    $("#info-text-container").removeClass("cursor-pointer");
+  } else {
+    $("#info-modal-copy").removeClass("d-none");
+    $("#info-text-container").addClass("cursor-pointer");
+  }
+
+  if (extraText) {
+    $("#info-extra-text").html(extraText);
+  } else {
+    $("#info-extra-text").html("");
+  }
 };
 
 const showWarning = (text, heading) => {
@@ -302,6 +369,7 @@ const showWarning = (text, heading) => {
  */
 let allowPerimeter = false;
 let answered = false;
+let caseThreeAcknowledge = false;
 
 const gaurdCoords = [80, 185, 210, 352];
 const gateCoords = [
@@ -358,7 +426,7 @@ const initGuardQuestions = () => {
 
 const setGuardMessage = (message = null, id = "guard-message") => {
   const guardMessage = $(`#${id}`);
-  guardMessage.text(message || "");
+  guardMessage.html(message || "");
   const width = message
     ? guardMessage.closest(".chat-message").width() - 70
     : 0;
@@ -385,14 +453,35 @@ const answerGuard = index => {
   $("#user-reply").removeClass("d-none");
   setUserMessage(phrases[index]);
   $("#guard-reply").removeClass("d-none");
-  setGuardMessage(
-    "Okay! let me log your details quickly so you can go on your merry way.",
-    "guard-reply-message"
-  );
 
-  $("#hint").removeClass("d-none");
+  let guardReply =
+    "Okay! let me log your details quickly so you can go on your merry way.";
+  if (currentCase === 3) {
+    guardReply +=
+      "<br/>You have been given an <b>EA Pass</b>. You can only go to Executive Assistance Office, right?";
+  }
+  setGuardMessage(guardReply, "guard-reply-message");
+
   answered = true;
-  allowPerimeter = true;
+  if (currentCase !== 3) {
+    $("#hint").removeClass("d-none");
+    allowPerimeter = true;
+  }
+
+  if (currentCase === 3) {
+    $("#case-3-acknowledgement").removeClass("d-none");
+  }
+};
+
+const acknowledge = (val = true) => {
+  caseThreeAcknowledge = val;
+  if (val) {
+    $("#case-3-acknowledgement-btn").addClass("text-bg-success");
+    allowPerimeter = true;
+    $("#hint").removeClass("d-none");
+  } else {
+    $("#case-3-acknowledgement-btn").removeClass("text-bg-success");
+  }
 };
 
 const clickGuard = () => {
@@ -425,6 +514,9 @@ const clickGate = () => {
     setTimer(3);
   } else if (currentCase === 3) {
     setTimer(4);
+    $("#passes").removeClass("d-none");
+    toggleEAPass();
+    $("#strikes").removeClass("d-none");
   }
 
   // reset state of the perimeter
@@ -481,8 +573,19 @@ const compoundClick = event => {
         "Workshop is closed at this moment. Someone noticed you snooping around but decided not to tell anyone about it.",
         "Workshop"
       );
+    } else if (currentCase === 3) {
+      if (!santaPass) {
+        addStrike();
+        return;
+      }
     }
   } else if (isWithin(base, officeCoords)) {
+    if (currentCase === 3) {
+      if (!santaPass) {
+        addStrike();
+        return;
+      }
+    }
     $(homeButton).removeClass("d-none");
     $(compoundAnchor).addClass("d-none");
 
@@ -517,6 +620,7 @@ const laptopCoords = [
   { x: [295, 680], y: [275, 363] },
 ];
 let santaLaptopLogin = false;
+let eaLaptopLogin = false;
 
 const santaOfficeMouseover = event => {
   const { offsetX, offsetY } = event;
@@ -587,13 +691,31 @@ const clickVault = () => {
 const unlockVault = () => {
   const password = document.getElementById("pwd-text").value;
 
-  const match =
-    currentCase === 1
-      ? caseOneVaultPwd
-      : santaLaptopLogin
-      ? caseTwoVaultTxt
-      : caseTwoLaptopPwd;
+  let match = caseOneVaultPwd;
+  if (currentCase === 2) {
+    match = santaLaptopLogin ? caseTwoVaultTxt : caseTwoLaptopPwd;
+  }
+
+  if (currentCase === 3) {
+    match = caseThreeEALaptopPwd;
+  }
+
   if (password !== match) {
+    if (currentCase === 3) {
+      eaLaptopPasswordAttempts++;
+      const left =
+        eaLaptopPasswordAttempts === 3 ? 3 : 3 - eaLaptopPasswordAttempts;
+      $("#passwordError").text(
+        `Invalid Password: ${left} more wrong attempt(s) will result in a strike.`
+      );
+      if (eaLaptopPasswordAttempts === 3) {
+        eaLaptopPasswordAttempts = 0;
+        addStrike();
+      }
+    } else {
+      $("#passwordError").text("Invalid Password");
+    }
+
     $("#passwordError").removeClass("d-none");
     return;
   } else {
@@ -623,10 +745,32 @@ const unlockVault = () => {
 
       setMeta(meta.FLAG);
       $(flagAnchor).removeClass("d-none");
+      return;
     }
     $("#txt-file-laptop").removeClass("d-none");
     $("#interactive-laptop").addClass("d-none");
     santaLaptopLogin = true;
+  }
+
+  if (currentCase === 3) {
+    if (eaLaptopLogin) {
+      $("#txt-file-laptop").addClass("d-none");
+      $("#interactive-laptop").removeClass("d-none");
+      eaLaptopLogin = false;
+
+      $(santaOfficeAnchor).addClass("d-none");
+
+      setMeta(meta.FLAG);
+      $(flagAnchor).removeClass("d-none");
+      return;
+    }
+
+    $("#secondary-heading").text("Executive Assistant Laptop");
+    $("#secondary-header").removeClass("d-none");
+
+    $("#txt-file-laptop").removeClass("d-none");
+    $("#interactive-laptop").addClass("d-none");
+    eaLaptopLogin = true;
   }
 };
 
@@ -638,36 +782,63 @@ const unlockVault = () => {
  */
 const drawerCoords = [117, 266, 220, 273];
 const envelopeCoords = [255, 410, 129, 190];
+const santaPassCoords = [363, 461, 206, 257];
 const postItNoteCoords = [478, 509, 120, 160];
+const eaPwdHintCoords = [348, 406, 88, 94];
+const eaPwdInputCoords = [348, 406, 99, 105];
+const eaLaptopCoords = [
+  { x: [323, 426], y: [64, 127] },
+  { x: [304, 445], y: [127, 156] },
+];
 let isDrawerOpen = false;
 
 const eaOfficeMouseover = event => {
   const { offsetX, offsetY } = event;
   const base = { offsetX, offsetY };
 
+  // console.log(base);
+
   if (isDrawerOpen) {
     const envelope = $("#envelope");
+    const santaCard = $("#santa-card");
     if (isWithin(base, envelopeCoords)) {
       envelope.addClass("show");
     } else if (envelope.hasClass("show")) {
       envelope.removeClass("show");
     }
+
+    if (isWithin(base, santaPassCoords)) {
+      santaCard.addClass("show");
+    } else if (santaCard.hasClass("show")) {
+      santaCard.removeClass("show");
+    }
     return;
   }
 
-  if (currentCase === 1) {
+  if ([1, 3].includes(currentCase)) {
     const drawer = $("#drawer");
     if (isWithin(base, drawerCoords)) {
       drawer.addClass("show");
     } else if (drawer.hasClass("show")) {
       drawer.removeClass("show");
     }
-  } else if (currentCase === 2) {
+  }
+
+  if ([2, 3].includes(currentCase)) {
     const postItNote = $("#postItNote");
     if (isWithin(base, postItNoteCoords)) {
       postItNote.addClass("show");
     } else if (postItNote.hasClass("show")) {
       postItNote.removeClass("show");
+    }
+  }
+
+  if (currentCase === 3) {
+    const eaOfficeLaptop = $("#eaOfficeLaptop");
+    if (isWithin(base, eaLaptopCoords)) {
+      eaOfficeLaptop.addClass("show");
+    } else if (eaOfficeLaptop.hasClass("show")) {
+      eaOfficeLaptop.removeClass("show");
     }
   }
 };
@@ -677,7 +848,8 @@ const openDrawer = () => {
   const drawer = $("#drawer");
 
   // update headings
-  $("#drawer-heading").removeClass("d-none");
+  $("#secondary-heading").text("Drawer");
+  $("#secondary-header").removeClass("d-none");
 
   // update images
   $("#ea-office-bg").addClass("d-none");
@@ -688,11 +860,51 @@ const openDrawer = () => {
 };
 
 const seeNotes = () => {
-  showInfo("Prepare: MilkAndCookies", "Post-it Notes", "postItNote");
+  if (currentCase === 2) {
+    showInfo("Prepare: MilkAndCookies", "Post-it Notes", "postItNote");
+    return;
+  }
+
+  if (currentCase === 3) {
+    const extraText = `<ul>
+    <li>Buy my favorite BanoffeePie.</li>
+    <li>Remind Santa to change his laptop password and make it harder to guess! Everyone knows his tendency to be iterative…</li>
+    </ul>`;
+    showInfo("Reminders:", "Post-it Notes", "postItNote", true, extraText);
+  }
 };
 
 const clickEnvelope = () => {
-  showInfo(caseOneVaultPwd, "Santa's Vault Password", "envelope");
+  const heading =
+    currentCase === 2 ? "Santa's Vault Password" : "Stack of Papers";
+  showInfo(caseOneVaultPwd, heading, "envelope");
+};
+
+const clickSantaCard = () => {
+  toggleSantaPass();
+  showInfo(
+    "Well done! You have collected the Santa Pass.",
+    "Santa Pass",
+    "santa-card",
+    true
+  );
+};
+
+const eaOfficeLaptopClick = () => {
+  const { offsetX, offsetY } = event;
+  const base = { offsetX, offsetY };
+
+  const laptop = $("#eaOfficeLaptop");
+  if (isWithin(base, eaPwdHintCoords)) {
+    showInfo("My Favorite!!!", "Password Hint");
+  } else if (isWithin(base, eaPwdInputCoords)) {
+    $("#pwd-modal-title").text("Laptop Password");
+    pwdModal.toggle();
+  }
+
+  if (laptop.hasClass("show")) {
+    laptop.removeClass("show");
+  }
 };
 
 /*******************************************

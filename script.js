@@ -36,6 +36,10 @@ const initFlag = () => {
   return makePromise(flagAnchor, "./flag.html");
 };
 
+const initWorkshop = () => {
+  return makePromise(workshopAnchor, "./workshop.html");
+};
+
 $(function() {
   $(homeAnchor).load("./home.html");
   showCases();
@@ -46,6 +50,7 @@ $(function() {
     initSantaOffice(),
     initDeerStable(),
     initEAOffice(),
+    initWorkshop(),
     initFlag(),
   ]).then(() => {
     const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');

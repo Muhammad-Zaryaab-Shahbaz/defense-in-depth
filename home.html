@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-12 text-center">
-    <h2>Mission ELF-Possible</h2>
-    <p class="text-center my-1">
+    <h2 id="home-title">Mission ELF-Possible</h2>
+    <p id="home-description" class="text-center my-1">
       You are going to be presented with three different cases each harder than
       the previous one. Your objective is to
       <u>get inside the perimeter</u>,
@@ -10,7 +10,37 @@
     </p>
     <hr class="my-2" />
   </div>
-  <div class="col-sm-6 col-xs-12 mx-auto py-5">
+  <div class="col-md-12 d-none" id="final-flag-container">
+    <div class="row">
+      <div class="col-md-8 col-sm-12 mx-auto">
+        <div class="flag-container d-flex flex-column w-100 my-2">
+          <div
+            class="flag-header d-flex align-items-center justify-content-center"
+          >
+            <h5 class="mb-0">Final Flag</h5>
+          </div>
+          <div class="flag-content text-center">
+            <h4 class="mb-0 thm-text-success" id="final-flag"></h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="home-intro" class="col-sm-10 col-xs-12 mx-auto py-5">
+    <h3 class="thm-text-success text-decoration-underline">Introduction</h3>
+    <ul>
+      <li>
+        In the vault is Santa's Naughty or Nice list for the year. As the Bad
+        Yeti, we want that list because it is the last step to destroy
+        Christmas!
+      </li>
+      <li>
+        We won't get it that easily though! They know we are coming, so we have
+        to navigate through Santa's defenses.
+      </li>
+    </ul>
+  </div>
+  <div id="startBtn" class="col-sm-6 col-xs-12 mx-auto py-2">
     <button
       class="option btn btn-lg text-white my-1 w-100"
       id="start-puzzle"
@@ -18,5 +48,12 @@
     >
       Start
     </button>
+  </div>
+  <div id="credits" class="col-sm-6 col-xs-12 mx-auto py-5 text-center d-none">
+    <h3>Credits</h3>
+    <p class="mb-0">Marc - Author</p>
+    <p class="mb-0">Zaryaab - Static Site</p>
+    <p class="mb-0">Lauren and Nicola - Designs</p>
+    <p class="mb-0">Marta - Ideas</p>
   </div>
 </div>

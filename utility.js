@@ -15,42 +15,66 @@ const meta = {
   COMPOUND: {
     title: "Compound",
     description: "Click on a building to visit it.",
+    id: 1,
   },
   PERIMETER_ONE: {
     title: "Perimeter: Essentially Free Entry",
     description: "Interact with items that highlight on hover.",
+    id: 2,
   },
   PERIMETER: {
     title: "Perimeter",
     description: "Interact with items that highlight on hover.",
+    id: 3,
   },
   SANTA_OFFICE: {
     title: "Santa Office",
     description: "Interact with items that highlight on hover.",
+    id: 4,
   },
   DEER_STABLE: {
     title: "Deer Stable",
     description: "Nothing to see here at this time.",
+    id: 5,
   },
   EA_OFFICE: {
     title: "Santa's Executive Assistant (EA) Office",
     description: "Interact with items that highlight on hover.",
+    id: 6,
   },
   FLAG: {
     title: "Flag",
     description: "Interact with items that highlight on hover.",
+    id: 7,
+  },
+  WORKSHOP: {
+    title: "Workshop",
+    description:
+      "Security looks serious - Interact with items that highlight on hover.",
+    id: 8,
   },
 };
 
 const homeButton = "#homeBtn";
 
-let isBookOpen = false;
+let isBookOpen = false,
+  isVaultOpen = false,
+  isDoorOpen = false,
+  isDrawerOpen = false;
+let activeScreen = 0;
 
 const caseOneVaultPwd = "S3cr3tV@ultPW";
 const caseTwoLaptopPwd = "MilkAndCookies";
 const caseTwoVaultTxt = "3XtrR@_S3cr3tV@ultPW";
 // const caseThreeEALaptopPwd = "BanoffeePie";
 const caseThreeEALaptopPwd = "1";
+// const caseThreeSantaLaptopPwd = "H0tCh0coL@t3_02";
+const caseThreeSantaLaptopPwd = "2";
+// const caseThreeVaultTxt = "N3w4nd1m";
+const caseThreeVaultTxt = "3";
+// const caseThreeVaultPwd = "N3w4nd1mPr0v3dV@ultPW";
+const caseThreeVaultPwd = "4";
+const santaCode = "2845";
 
 const initModal = id => new bootstrap.Modal(document.getElementById(id), {});
 const flagModal = initModal("flag");
@@ -111,9 +135,10 @@ const setTimer = minutes => {
   }, 1000);
 };
 
-const setMeta = ({ title, description }) => {
+const setMeta = ({ title, description, id }) => {
   $("#title").text(title);
   $("#description").text(description);
+  activeScreen = id;
 };
 
 const showCases = () => {
@@ -304,9 +329,15 @@ const nextCase = () => {
   $("#flag-text").text("");
 
   isBookOpen = false;
+  isVaultOpen = false;
   // update images
   $("#flag-bg").removeClass("d-none");
   $("#open-book").addClass("d-none");
+
+  if (currentCase === 3) {
+    goHome();
+    return;
+  }
 
   if (currentCase === 1) {
     $("#interactive-laptop").removeClass("d-none");
@@ -326,6 +357,12 @@ const start = () => {
   $("#header").removeClass("d-none");
   setMeta(meta.PERIMETER_ONE);
   $(perimeterAnchor).removeClass("d-none");
+
+  /* clickGuard();
+  answerGuard(1);
+  acknowledge();
+  clickGate();
+  $("#interactive-laptop").removeClass("d-none"); */
 };
 
 const showInfo = (
@@ -359,6 +396,11 @@ const showWarning = (text, heading) => {
   $("#warning-title").html(heading);
   $("#warning-text").html(text);
   warningModal.toggle();
+};
+
+const closePwdModal = () => {
+  isVaultOpen = false;
+  pwdModal.toggle();
 };
 
 /*******************************************
@@ -578,6 +620,12 @@ const compoundClick = event => {
         addStrike();
         return;
       }
+
+      $(homeButton).removeClass("d-none");
+      $(compoundAnchor).addClass("d-none");
+
+      setMeta(meta.WORKSHOP);
+      $(workshopAnchor).removeClass("d-none");
     }
   } else if (isWithin(base, officeCoords)) {
     if (currentCase === 3) {
@@ -634,25 +682,25 @@ const santaOfficeMouseover = event => {
     vault.removeClass("show");
   }
 
-  if (currentCase === 2) {
-    if (santaLaptopLogin) {
-      const laptop = $("#txt-file-laptop-glow");
-      if (isWithin(base, laptopCoords)) {
-        laptop.addClass("show");
-      } else if (laptop.hasClass("show")) {
-        laptop.removeClass("show");
-      }
-      return;
-    }
+  if (currentCase === 1) return;
 
-    const laptop = $("#interactive-laptop");
-    if (isWithin(base, pwdHintCoords)) {
-      laptop.addClass("cursor-pointer");
-    } else if (isWithin(base, pwdInputCoords)) {
-      laptop.addClass("cursor-pointer");
-    } else if (laptop.hasClass("cursor-pointer")) {
-      laptop.removeClass("cursor-pointer");
+  if (santaLaptopLogin) {
+    const laptop = $("#txt-file-laptop-glow");
+    if (isWithin(base, laptopCoords)) {
+      laptop.addClass("show");
+    } else if (laptop.hasClass("show")) {
+      laptop.removeClass("show");
     }
+    return;
+  }
+
+  const laptop = $("#interactive-laptop");
+  if (isWithin(base, pwdHintCoords)) {
+    laptop.addClass("cursor-pointer");
+  } else if (isWithin(base, pwdInputCoords)) {
+    laptop.addClass("cursor-pointer");
+  } else if (laptop.hasClass("cursor-pointer")) {
+    laptop.removeClass("cursor-pointer");
   }
 };
 
@@ -660,25 +708,31 @@ const santaOfficeClick = event => {
   const { offsetX, offsetY } = event;
   const base = { offsetX, offsetY };
 
-  if (currentCase === 2) {
-    if (santaLaptopLogin) {
-      if (isWithin(base, laptopCoords)) {
-        showInfo(caseTwoVaultTxt, "Vault.txt", "txt-file-laptop-glow");
-        return;
-      }
-    }
+  if (currentCase === 1) return;
 
-    const laptop = $("#interactive-laptop");
-    if (isWithin(base, pwdHintCoords)) {
-      showInfo("Santa's Favorite", "Password Hint");
-    } else if (isWithin(base, pwdInputCoords)) {
-      $("#pwd-modal-title").text("Laptop Password");
-      pwdModal.toggle();
+  if (santaLaptopLogin) {
+    if (isWithin(base, laptopCoords)) {
+      const title = currentCase === 2 ? "Vault.txt" : "Vault (1/2).txt";
+      const pwd = currentCase === 2 ? caseTwoVaultTxt : caseThreeVaultTxt;
+      showInfo(pwd, title, "txt-file-laptop-glow");
+      return;
     }
+  }
 
-    if (laptop.hasClass("cursor-pointer")) {
-      laptop.removeClass("cursor-pointer");
-    }
+  const laptop = $("#interactive-laptop");
+  if (isWithin(base, pwdHintCoords)) {
+    const pwdHint =
+      currentCase === 2
+        ? "Santa's Favorite"
+        : "MilkAndCookies are so yesterday";
+    showInfo(pwdHint, "Password Hint");
+  } else if (isWithin(base, pwdInputCoords)) {
+    $("#pwd-modal-title").text("Laptop Password");
+    pwdModal.toggle();
+  }
+
+  if (laptop.hasClass("cursor-pointer")) {
+    laptop.removeClass("cursor-pointer");
   }
 };
 
@@ -686,6 +740,7 @@ const clickVault = () => {
   // modal with textbox and unlock button
   $("#pwd-modal-title").text("Vault");
   pwdModal.toggle();
+  isVaultOpen = true;
 };
 
 const unlockVault = () => {
@@ -697,11 +752,19 @@ const unlockVault = () => {
   }
 
   if (currentCase === 3) {
-    match = caseThreeEALaptopPwd;
+    if (activeScreen === meta.EA_OFFICE.id) {
+      match = caseThreeEALaptopPwd;
+    } else if (activeScreen === meta.WORKSHOP.id) {
+      match = santaCode;
+    } else if (isVaultOpen) {
+      match = caseThreeVaultPwd;
+    } else {
+      match = caseThreeSantaLaptopPwd;
+    }
   }
 
   if (password !== match) {
-    if (currentCase === 3) {
+    if (currentCase === 3 && activeScreen === meta.EA_OFFICE.id) {
       eaLaptopPasswordAttempts++;
       const left =
         eaLaptopPasswordAttempts === 3 ? 3 : 3 - eaLaptopPasswordAttempts;
@@ -712,6 +775,8 @@ const unlockVault = () => {
         eaLaptopPasswordAttempts = 0;
         addStrike();
       }
+    } else if (currentCase === 3 && activeScreen === meta.WORKSHOP.id) {
+      $("#passwordError").text("Invalid Code");
     } else {
       $("#passwordError").text("Invalid Password");
     }
@@ -736,7 +801,7 @@ const unlockVault = () => {
   }
 
   if (currentCase === 2) {
-    if (santaLaptopLogin) {
+    if (isVaultOpen) {
       $("#txt-file-laptop").addClass("d-none");
       $("#interactive-laptop").removeClass("d-none");
       santaLaptopLogin = false;
@@ -747,30 +812,57 @@ const unlockVault = () => {
       $(flagAnchor).removeClass("d-none");
       return;
     }
+
     $("#txt-file-laptop").removeClass("d-none");
     $("#interactive-laptop").addClass("d-none");
     santaLaptopLogin = true;
   }
 
   if (currentCase === 3) {
-    if (eaLaptopLogin) {
-      $("#txt-file-laptop").addClass("d-none");
-      $("#interactive-laptop").removeClass("d-none");
-      eaLaptopLogin = false;
+    if (activeScreen === meta.EA_OFFICE.id) {
+      /* if (eaLaptopLogin) {
+        $("#txt-file-laptop").addClass("d-none");
+        $("#interactive-laptop").removeClass("d-none");
+        eaLaptopLogin = false;
 
-      $(santaOfficeAnchor).addClass("d-none");
+        $(santaOfficeAnchor).addClass("d-none");
 
-      setMeta(meta.FLAG);
-      $(flagAnchor).removeClass("d-none");
+        setMeta(meta.FLAG);
+        $(flagAnchor).removeClass("d-none");
+        return;
+      } */
+
+      $("#secondary-heading").text("Executive Assistant Laptop");
+      $("#secondary-header").removeClass("d-none");
+      eaLaptopLogin = true;
+      /* $("#txt-file-laptop").removeClass("d-none");
+      $("#interactive-laptop").addClass("d-none"); */
+    }
+
+    if (activeScreen === meta.SANTA_OFFICE.id) {
+      if (isVaultOpen) {
+        $("#txt-file-laptop").addClass("d-none");
+        $("#interactive-laptop").removeClass("d-none");
+        santaLaptopLogin = false;
+
+        $(santaOfficeAnchor).addClass("d-none");
+
+        setMeta(meta.FLAG);
+        $(flagAnchor).removeClass("d-none");
+        return;
+      }
+
+      santaLaptopLogin = true;
+      $("#txt-file-laptop").removeClass("d-none");
+      $("#interactive-laptop").addClass("d-none");
       return;
     }
 
-    $("#secondary-heading").text("Executive Assistant Laptop");
-    $("#secondary-header").removeClass("d-none");
-
-    $("#txt-file-laptop").removeClass("d-none");
-    $("#interactive-laptop").addClass("d-none");
-    eaLaptopLogin = true;
+    if (activeScreen === meta.WORKSHOP.id) {
+      $("#workshop-open").removeClass("d-none");
+      $("#workshop-bg").addClass("d-none");
+      isDoorOpen = true;
+    }
   }
 };
 
@@ -790,7 +882,6 @@ const eaLaptopCoords = [
   { x: [323, 426], y: [64, 127] },
   { x: [304, 445], y: [127, 156] },
 ];
-let isDrawerOpen = false;
 
 const eaOfficeMouseover = event => {
   const { offsetX, offsetY } = event;
@@ -800,17 +891,19 @@ const eaOfficeMouseover = event => {
 
   if (isDrawerOpen) {
     const envelope = $("#envelope");
-    const santaCard = $("#santa-card");
     if (isWithin(base, envelopeCoords)) {
       envelope.addClass("show");
     } else if (envelope.hasClass("show")) {
       envelope.removeClass("show");
     }
 
-    if (isWithin(base, santaPassCoords)) {
-      santaCard.addClass("show");
-    } else if (santaCard.hasClass("show")) {
-      santaCard.removeClass("show");
+    if (currentCase === 3) {
+      const santaCard = $("#santa-card");
+      if (isWithin(base, santaPassCoords)) {
+        santaCard.addClass("show");
+      } else if (santaCard.hasClass("show")) {
+        santaCard.removeClass("show");
+      }
     }
     return;
   }
@@ -875,12 +968,15 @@ const seeNotes = () => {
 };
 
 const clickEnvelope = () => {
-  const heading =
-    currentCase === 2 ? "Santa's Vault Password" : "Stack of Papers";
+  let heading = "Stack of Papers";
+  if ([1, 2].includes(currentCase)) {
+    heading = "Santa's Vault Password";
+  }
   showInfo(caseOneVaultPwd, heading, "envelope");
 };
 
 const clickSantaCard = () => {
+  if (currentCase !== 3) return;
   toggleSantaPass();
   showInfo(
     "Well done! You have collected the Santa Pass.",
@@ -948,8 +1044,72 @@ const openBook = () => {
     book.removeClass("show");
   }
 
-  const flag =
-    currentCase === 1 ? "VEhNe0VaX2ZsQDYhfQ==" : "VEhNe20wQHJfNXQzcFNfbjB3IX0=";
-  $("#flag-text").text(atob(flag));
+  let flag = atob("VEhNe0VaX2ZsQDYhfQ==");
+  if (currentCase === 2) {
+    flag = atob("VEhNe20wQHJfNXQzcFNfbjB3IX0=");
+  } else if (currentCase === 3) {
+    flag = atob("VEhNe0JAZF9ZM3QxXzFzX25AdTZodHl9");
+    $("#code-container").removeClass("d-none");
+    $("#santa-code").text(santaCode);
+  }
+
+  $("#flag-text").text(flag);
+  const btnText = currentCase === 3 ? "Go to compound" : "Next Case";
+  $("#next-case-btn").text(btnText);
   flagModal.toggle();
+};
+
+/*******************************************
+ * *****************************************
+ * ***************** Flag ******************
+ * *****************************************
+ * *****************************************
+ */
+const doorCoords = [412, 464, 227, 307];
+const scannerCoords = [394, 409, 272, 290];
+
+const workshopMouseover = event => {
+  const { offsetX, offsetY } = event;
+  const base = { offsetX, offsetY };
+
+  const scanner = $("#scanner");
+  if (isWithin(base, scannerCoords)) {
+    scanner.addClass("show");
+  } else if (scanner.hasClass("show")) {
+    scanner.removeClass("show");
+  }
+
+  const door = $("#door");
+  if (isWithin(base, doorCoords)) {
+    door.addClass("show");
+  } else if (door.hasClass("show")) {
+    door.removeClass("show");
+  }
+};
+
+const openDoor = () => {
+  if (!isDoorOpen) {
+    showWarning("The door is closed. Enter the PIN to unlock.", "Warning");
+    return;
+  }
+
+  completeCase(currentCase);
+  $("#home-title").text("Thank you for making it this far!");
+  $("#home-description").addClass("d-none");
+  $("#startBtn").addClass("d-none");
+  $("#home-intro").addClass("d-none");
+  $("#credits").removeClass("d-none");
+
+  $("#final-flag").text(atob("VEhNe0QzZjNuNWVfMW5fRDNwdGhfMXNfazAwTCEhfQ=="));
+  $("#final-flag-container").removeClass("d-none");
+
+  $("#header").addClass("d-none");
+  goHome();
+  $(compoundAnchor).addClass("d-none");
+  $(homeAnchor).removeClass("d-none");
+};
+
+const enterCode = () => {
+  $("#pwd-modal-title").text("Santa Code");
+  pwdModal.toggle();
 };

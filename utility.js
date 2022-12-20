@@ -1094,6 +1094,7 @@ const openDoor = () => {
   }
 
   completeCase(currentCase);
+  clearInterval(timerInterval);
   $("#home-title").text("Thank you for making it this far!");
   $("#home-description").addClass("d-none");
   $("#startBtn").addClass("d-none");

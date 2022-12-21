@@ -354,6 +354,12 @@ const nextCase = () => {
   currentCase++;
   selectCase(currentCase);
   resetGame();
+
+  const text =
+    currentCase === 2
+      ? "In this level, Santa's security is ramped up. It has additional defense layers in place, but their main focus is prevention. We might be able to bypass them if we're patient and we play our cards right."
+      : "In this level, Santa's security is at the maximum! Aside from the previous case's additional defense layers, Santa's defenses give feedback to the security team. Our room for mistake is very thin, and we should play our cards right the first time.";
+  showInfo(text, "Instructions", null, true);
 };
 
 const start = () => {
@@ -364,6 +370,13 @@ const start = () => {
   $("#header").removeClass("d-none");
   setMeta(meta.PERIMETER_ONE);
   $(perimeterAnchor).removeClass("d-none");
+
+  showInfo(
+    "In this level, Santa's security is focused on the perimeter. Given that, we can expect that there may be complete trust within the compound.",
+    "Instructions",
+    null,
+    true
+  );
 
   /* clickGuard();
   answerGuard(1);
@@ -381,15 +394,18 @@ const showInfo = (
 ) => {
   $("#info-title").html(heading);
   $("#info-text").html(text);
-  infoModal.toggle();
   if (anchor) $(`#${anchor}`).removeClass("show");
   disabledCopy["info-text"] = disableCopy;
+
+  const tooltip = bootstrap.Tooltip.getInstance(`#info-text-container`);
   if (disableCopy) {
     $("#info-modal-copy").addClass("d-none");
     $("#info-text-container").removeClass("cursor-pointer");
+    tooltip.setContent({ ".tooltip-inner": heading });
   } else {
     $("#info-modal-copy").removeClass("d-none");
     $("#info-text-container").addClass("cursor-pointer");
+    tooltip.setContent({ ".tooltip-inner": "Copy to clipboard" });
   }
 
   if (extraText) {
@@ -397,6 +413,7 @@ const showInfo = (
   } else {
     $("#info-extra-text").html("");
   }
+  infoModal.toggle();
 };
 
 const showWarning = (text, heading) => {
@@ -552,6 +569,7 @@ const clickGate = () => {
       "The gate is closed. Talk to the guard to let you through.",
       "Warning"
     );
+    $("#gate").removeClass("show");
     return;
   }
 

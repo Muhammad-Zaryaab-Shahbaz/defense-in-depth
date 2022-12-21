@@ -117,6 +117,7 @@ const restart = () => {
 
   nextCase(currentCase - 1);
   $("#pwd-text").val("");
+  $("#passwordError").text("");
 
   if (currentCase === 3) {
     eaLaptopPasswordAttempts = 0;
@@ -339,7 +340,7 @@ const resetStrikes = () => {
 
 const addStrike = () => {
   strikes++;
-  if (strikes > 3) {
+  if (strikes >= 3) {
     gameOver();
     return false;
   }
@@ -347,7 +348,10 @@ const addStrike = () => {
   targetTime = targetTime - 45000;
   $(`#strike-${strikes}`).addClass("text-danger");
   $("#strike-info").html(strikes);
-  showWarning("Watch Out! Security has noted this activity.", "Strike");
+  showWarning(
+    "Watch Out! Security has noticed this activity. Your timer is reduced each time it happens, you need to be more careful!",
+    "Strike"
+  );
   return true;
 };
 
@@ -532,10 +536,12 @@ const perimeterMouseover = event => {
 };
 
 const showHint = () => {
-  const text =
-    currentCase === 1
-      ? "Looks like that guard does not pay close attention to the reason we gave."
-      : "Click on the <b>gate</b> to proceed.";
+  let text;
+
+  if (currentCase === 1) {
+    text = "The guard did not seem to care about our excuse. ";
+  }
+  text += "Click on the <b>gate</b> to proceed.";
   $("#hint").removeClass("d-none");
   $("#hint-text").html(text);
   allowPerimeter = true;
@@ -583,6 +589,7 @@ const answerGuard = index => {
   $(".guard-answer").removeClass("text-bg-danger");
   if (currentCase > 1 && index !== correctAnswer) {
     $(`#guard-answer-${index}`).addClass("text-bg-danger");
+    gameOver();
     return;
   }
 
@@ -1077,7 +1084,7 @@ const seeNotes = () => {
   if (currentCase === 3) {
     const extraText = `<ul>
     <li>Buy my favorite BanoffeePie.</li>
-    <li>Remind Santa to change his laptop password and make it harder to guess! Everyone knows his tendency to be iterative…</li>
+    <li>Remind Santa to change his laptop password and make it harder to guess! Everyone knows his tendency to be lazy and repetitive...</li>
     </ul>`;
     showInfo("Reminders:", "Post-it Notes", "postItNote", true, extraText);
   }

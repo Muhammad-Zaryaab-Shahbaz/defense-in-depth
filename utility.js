@@ -500,6 +500,8 @@ const showWarning = (text, heading) => {
 
 const closePwdModal = () => {
   isVaultOpen = false;
+  $("#pwd-text").val("");
+  $("#passwordError").text("");
   pwdModal.hide();
 };
 

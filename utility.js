@@ -552,7 +552,7 @@ const perimeterMouseover = event => {
 };
 
 const showHint = () => {
-  let text;
+  let text = "";
 
   if (currentCase === 1) {
     text = "The guard did not seem to care about our excuse. ";

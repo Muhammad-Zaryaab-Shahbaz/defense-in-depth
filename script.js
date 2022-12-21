@@ -55,11 +55,5 @@ $(function() {
   ]).then(() => {
     const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     [...tooltips].map(t => new bootstrap.Tooltip(t));
-
-    // TODO: Remove this
-    // $("#interactive-laptop").removeClass("d-none");
   });
-
-  // TODO: Remove this
-  // start();
 });

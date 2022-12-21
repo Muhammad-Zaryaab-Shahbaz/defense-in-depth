@@ -125,7 +125,7 @@
             Game over!
             <button
               class="neutral btn mt-2 w-100 text-white"
-              onclick="gameOver()"
+              onclick="restart()"
             >
               Restart
             </button>
@@ -323,9 +323,9 @@
                     data-bs-title="Each wrong interaction will subtract 45s and give you 1 strike"
                   >
                     <h3 id="time" class="mb-0 fw-bold me-2">Strikes:</h3>
-                    <i id="strike-1" class="fas fa-times me-2 fa-2x"></i>
-                    <i id="strike-2" class="fas fa-times me-2 fa-2x"></i>
-                    <i id="strike-3" class="fas fa-times me-2 fa-2x"></i>
+                    <i id="strike-1" class="fas fa-times me-2 fa-2x strike"></i>
+                    <i id="strike-2" class="fas fa-times me-2 fa-2x strike"></i>
+                    <i id="strike-3" class="fas fa-times me-2 fa-2x strike"></i>
                     <small>(<span id="strike-info">0</span>/3)</small>
                   </div>
                 </div>

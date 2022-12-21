@@ -115,6 +115,11 @@ const restart = () => {
   $("#envelope,#santa-card,#drawer,#postItNote,#book").removeClass("show");
   $("#eaOfficeLaptop,#ea-laptop-file,#ea-laptop-trash").removeClass("show");
 
+  $("#conversation").addClass("d-none");
+  setGuardMessage();
+  setUserMessage();
+  setGuardMessage(null, "guard-reply-message");
+
   nextCase(currentCase - 1);
   $("#pwd-text").val("");
   $("#passwordError").text("");
@@ -135,7 +140,19 @@ const restart = () => {
   }
 };
 
-const gameOver = () => {
+const gameOver = (initialPoint = false) => {
+  if (initialPoint) {
+    $("#game-over-text").text(
+      "Your purpose of visit does not merit an entry to Santa's Compound. I suggest you handle your business in another way. Have a lovely day ahead!"
+    );
+    document.getElementById("time").innerHTML = "00:00";
+  } else {
+    $("#game-over-text").text(
+      "The guards have noticed that you’ve been gone a while and when they started to investigate, they saw you snooping around the compound. Game over!"
+    );
+    document.getElementById("time").innerHTML = "Game Over";
+  }
+
   clearInterval(timerInterval);
 
   // hide modals
@@ -144,7 +161,6 @@ const gameOver = () => {
   pwdModal.hide();
   warningModal.hide();
 
-  document.getElementById("time").innerHTML = "Game Over";
   gameOverModal.toggle();
   restartInterval = setInterval(() => restart(), 8000);
 };
@@ -340,14 +356,14 @@ const resetStrikes = () => {
 
 const addStrike = () => {
   strikes++;
+  $(`#strike-${strikes}`).addClass("text-danger");
+  $("#strike-info").html(strikes);
   if (strikes >= 3) {
     gameOver();
     return false;
   }
 
   targetTime = targetTime - 45000;
-  $(`#strike-${strikes}`).addClass("text-danger");
-  $("#strike-info").html(strikes);
   showWarning(
     "Watch Out! Security has noticed this activity. Your timer is reduced each time it happens, you need to be more careful!",
     "Strike"
@@ -589,7 +605,7 @@ const answerGuard = index => {
   $(".guard-answer").removeClass("text-bg-danger");
   if (currentCase > 1 && index !== correctAnswer) {
     $(`#guard-answer-${index}`).addClass("text-bg-danger");
-    gameOver();
+    gameOver(true);
     return;
   }
 

@@ -67,16 +67,16 @@ let activeScreen = 0;
 const caseOneVaultPwd = "S3cr3tV@ultPW";
 const caseTwoLaptopPwd = "MilkAndCookies";
 const caseTwoVaultTxt = "3XtrR@_S3cr3tV@ultPW";
-// const caseThreeEALaptopPwd = "BanoffeePie";
-const caseThreeEALaptopPwd = "1";
-// const caseThreeSantaLaptopPwd = "H0tCh0coL@t3_02";
-const caseThreeSantaLaptopPwd = "2";
-// const caseThreeVaultTxt = "N3w4nd1m";
-const caseThreeVaultTxt = "3";
+const caseThreeEALaptopPwd = "BanoffeePie";
+// const caseThreeEALaptopPwd = "1";
+const caseThreeSantaLaptopPwd = "H0tCh0coL@t3_02";
+// const caseThreeSantaLaptopPwd = "2";
+const caseThreeVaultTxt = "N3w4nd1m";
+// const caseThreeVaultTxt = "3";
 const caseThreeVaultText2 = "Pr0v3dV@ultPW";
 const caseThreeOldPwd = "H0tCh0coL@t3_01";
-// const caseThreeVaultPwd = "N3w4nd1mPr0v3dV@ultPW";
-const caseThreeVaultPwd = "4";
+const caseThreeVaultPwd = "N3w4nd1mPr0v3dV@ultPW";
+// const caseThreeVaultPwd = "4";
 const santaCode = "2845";
 
 const initModal = id => new bootstrap.Modal(document.getElementById(id), {});
@@ -86,7 +86,7 @@ const infoModal = initModal("infoModal");
 const pwdModal = initModal("pwdModal");
 const warningModal = initModal("warningModal");
 
-let targetTime, timerInterval;
+let targetTime, timerInterval, penaltyInterval;
 
 let currentCase = -1;
 let progress = 0;
@@ -189,6 +189,10 @@ const backToOffice = () => {
   $("#open-laptop").addClass("d-none");
 };
 
+const removePenalty = () => {
+  if (penaltyInterval) clearInterval(penaltyInterval);
+};
+
 const goHome = () => {
   $(homeButton).addClass("d-none");
 
@@ -202,6 +206,7 @@ const goHome = () => {
   setMeta(meta.COMPOUND);
   $(compoundAnchor).removeClass("d-none");
   backToOffice();
+  removePenalty();
 };
 
 const isWithin = (event, coords) => {
@@ -296,6 +301,14 @@ const addStrike = () => {
   $("#strike-info").html(strikes);
   showWarning("Watch Out! Security has noted this activity.", "Strike");
   return true;
+};
+
+const increaseTimerSpeed = () => {
+  penaltyInterval = setInterval(function() {
+    if (targetTime > 0) {
+      targetTime -= 4000;
+    }
+  }, 1000);
 };
 
 /*******************************************
@@ -669,6 +682,12 @@ const compoundClick = event => {
     $(compoundAnchor).addClass("d-none");
 
     setMeta(meta.DEER_STABLE);
+    if (currentCase === 3) {
+      $("#description").text(
+        "Nothing to see here except for deer... or is there really nothing?"
+      );
+      increaseTimerSpeed();
+    }
     $(deerAnchor).removeClass("d-none");
   } else if (isWithin(base, EAOfficeCoords)) {
     $(homeButton).removeClass("d-none");

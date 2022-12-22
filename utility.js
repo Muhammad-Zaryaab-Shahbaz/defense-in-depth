@@ -1,4 +1,9 @@
 /**
+ * Author: Muhammad Zaryaab Shahbaz
+ * Email: zariab64@gmail.com
+ * Date: 11/15/22
+ */
+/**
  * Display cases on the bottom of the game
  */
 // anchors
@@ -91,7 +96,8 @@ let targetTime, timerInterval, penaltyInterval, restartInterval;
 let currentCase = -1;
 let progress = 0;
 let strikes = 0;
-let eaLaptopPasswordAttempts = 0;
+let eaLaptopPasswordAttempts = 0,
+  santaLaptopPasswordAttempts = 0;
 let eaPass = false;
 let santaPass = false;
 const disabledCopy = {};
@@ -126,6 +132,7 @@ const restart = () => {
 
   if (currentCase === 3) {
     eaLaptopPasswordAttempts = 0;
+    santaLaptopPasswordAttempts = 0;
     eaLaptopLogin = false;
 
     $("#workshop-open").addClass("d-none");
@@ -901,6 +908,17 @@ const unlockVault = () => {
         eaLaptopPasswordAttempts = 0;
         addStrike();
       }
+    } else if (currentCase === 3 && activeScreen === meta.SANTA_OFFICE.id) {
+      santaLaptopPasswordAttempts++;
+      const left =
+        santaLaptopPasswordAttempts === 3 ? 3 : 3 - santaLaptopPasswordAttempts;
+      $("#passwordError").text(
+        `Invalid Password: ${left} more wrong attempt(s) will result in a strike.`
+      );
+      if (santaLaptopPasswordAttempts === 3) {
+        santaLaptopPasswordAttempts = 0;
+        addStrike();
+      }
     } else if (currentCase === 3 && activeScreen === meta.WORKSHOP.id) {
       $("#passwordError").text("Invalid Code");
     } else {
@@ -1263,3 +1281,58 @@ const enterCode = () => {
   $("#pwd-modal-title").text("Santa Code");
   pwdModal.toggle();
 };
+
+const makePromise = (anchor, filePath, callback) => {
+  return new Promise(resolve => {
+    $(anchor).load(filePath, () => {
+      if (callback) callback();
+      resolve(true);
+    });
+  });
+};
+
+const initPerimeter = () => {
+  return makePromise(perimeterAnchor, "./perimeter.html");
+};
+
+const initCompound = () => {
+  return makePromise(compoundAnchor, "./compound.html");
+};
+
+const initSantaOffice = () => {
+  return makePromise(santaOfficeAnchor, "./santa_office.html");
+};
+
+const initDeerStable = () => {
+  return makePromise(deerAnchor, "./deer_stable.html");
+};
+
+const initEAOffice = () => {
+  return makePromise(eaOfficeAnchor, "./ea_office.html");
+};
+
+const initFlag = () => {
+  return makePromise(flagAnchor, "./flag.html");
+};
+
+const initWorkshop = () => {
+  return makePromise(workshopAnchor, "./workshop.html");
+};
+
+$(function() {
+  $(homeAnchor).load("./home.html");
+  showCases();
+
+  Promise.all([
+    initPerimeter(),
+    initCompound(),
+    initSantaOffice(),
+    initDeerStable(),
+    initEAOffice(),
+    initWorkshop(),
+    initFlag(),
+  ]).then(() => {
+    const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    [...tooltips].map(t => new bootstrap.Tooltip(t));
+  });
+});

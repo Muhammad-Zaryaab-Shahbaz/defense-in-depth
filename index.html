@@ -32,10 +32,6 @@
       property="og:description"
       content="An online platform for learning and teaching cyber security, all through your browser."
     />
-    <meta
-      title="author"
-      content="Muhammad Zaryaab Shahbaz (zariab64@gmail.com)"
-    />
     <link
       rel="icon"
       type="image/png"
@@ -238,143 +234,129 @@
       </div>
     </div>
 
-    <div class="container-fluid py-4">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="game-body d-flex flex-column justify-content-between">
-            <!-- Header -->
-            <div
-              id="header"
-              class="container-fluid thm-bg-dark p-4 pb-0 d-none"
-            >
-              <div class="row">
-                <div class="col-sm-12 col-md-2 mb-sm-3 mb-md-0">
-                  <div class="text-center h-100 d-flex align-items-center">
-                    <img
-                      class="logo w-100"
-                      alt="Logo"
-                      src="https://assets.tryhackme.com/img/logo/tryhackme_logo_full.svg"
-                    />
-                  </div>
-                </div>
-                <div class="col-sm-12 col-md-10">
-                  <h3 class="text-center mb-0" id="title">Perimeter</h3>
-                  <p class="text-center mb-0 thm-text-success" id="description">
-                    Interact with items that highlight on hover.
-                  </p>
-                </div>
-                <div class="col-md-12"><hr /></div>
-              </div>
-              <div class="row d-flex align-items-center">
-                <div class="col-md-4">
-                  <button
-                    id="homeBtn"
-                    class="btn text-white back d-flex align-items-center mb-3 d-none"
-                    onclick="goHome()"
-                  >
-                    <i class="fas fa-angle-left"></i>
-                    <span class="d-block" style="margin-bottom: 1px"
-                      >&nbsp;Home</span
-                    >
-                  </button>
-                </div>
-                <div class="col-md-4">
-                  <div
-                    id="clock"
-                    data-bs-toggle="tooltip"
-                    data-bs-title="Time Remaining"
-                    class="d-flex align-items-center justify-content-center mb-3 d-none"
-                  >
-                    <i class="fas fa-clock me-2 fa-lg"></i>
-                    <h3 id="time" class="mb-0 fw-bold">00:00</h3>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div
-                    id="passes"
-                    class="d-flex align-items-center justify-content-center mb-3 d-none"
-                  >
-                    <i
-                      class="fas fa-id-card me-2 fa-3x"
-                      data-bs-toggle="tooltip"
-                      data-bs-title="Passes give you Access"
-                    ></i>
-                    <img
-                      id="ea-pass"
-                      class="me-2 d-none"
-                      src="images/EA ID card.png"
-                      data-bs-toggle="tooltip"
-                      data-bs-title="EA Pass: Access to EA Office, Deer Stable"
-                      alt="EA Pass"
-                    />
-                    <img
-                      id="santa-pass"
-                      class="d-none"
-                      src="images/Santa ID card.png"
-                      data-bs-toggle="tooltip"
-                      data-bs-title="Santa Pass: Access to Santa Office, Workshop"
-                      alt="Santa Pass"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-4 pb-3 mx-auto d-none" id="strikes">
-                  <div
-                    class="d-flex align-items-center justify-content-center"
-                    data-bs-toggle="tooltip"
-                    data-bs-title="Each wrong interaction will subtract 45s and give you 1 strike"
-                  >
-                    <h3 id="time" class="mb-0 fw-bold me-2">Strikes:</h3>
-                    <i id="strike-1" class="fas fa-times me-2 fa-2x strike"></i>
-                    <i id="strike-2" class="fas fa-times me-2 fa-2x strike"></i>
-                    <i id="strike-3" class="fas fa-times me-2 fa-2x strike"></i>
-                    <small>(<span id="strike-info">0</span>/3)</small>
-                  </div>
-                </div>
-              </div>
+    <div class="game-body d-flex flex-column justify-content-between">
+      <!-- Header -->
+      <div id="header" class="container-fluid thm-bg-dark p-4 pb-0 d-none">
+        <div class="row">
+          <div class="col-sm-12 col-md-2 mb-sm-3 mb-md-0">
+            <div class="text-center h-100 d-flex align-items-center">
+              <img
+                class="logo w-100"
+                alt="Logo"
+                src="https://assets.tryhackme.com/img/logo/tryhackme_logo_full.svg"
+              />
             </div>
-            <!-- Header End -->
-
-            <!-- Home -->
-            <div id="homeAnchor" class="container-fluid py-3"></div>
-            <!-- Home End -->
-
-            <!-- Perimeter -->
-            <div id="perimeterAnchor" class="container-fluid py-3 d-none"></div>
-            <!-- Perimeter End -->
-
-            <!-- Compound -->
-            <div id="compoundAnchor" class="container-fluid py-3 d-none"></div>
-            <!-- Compound End -->
-
-            <!-- Santa Office -->
+          </div>
+          <div class="col-sm-12 col-md-10">
+            <h3 class="text-center mb-0" id="title">Perimeter</h3>
+            <p class="text-center mb-0 thm-text-success" id="description">
+              Interact with items that highlight on hover.
+            </p>
+          </div>
+          <div class="col-md-12"><hr /></div>
+        </div>
+        <div class="row d-flex align-items-center">
+          <div class="col-md-4">
+            <button
+              id="homeBtn"
+              class="btn text-white back d-flex align-items-center mb-3 d-none"
+              onclick="goHome()"
+            >
+              <i class="fas fa-angle-left"></i>
+              <span class="d-block" style="margin-bottom: 1px">&nbsp;Home</span>
+            </button>
+          </div>
+          <div class="col-md-4">
             <div
-              id="santaOfficeAnchor"
-              class="container-fluid py-3 d-none"
-            ></div>
-            <!-- Santa Office End -->
-
-            <!-- Workshop -->
-            <div id="workshopAnchor" class="container-fluid py-3 d-none"></div>
-            <!-- Workshop End -->
-
-            <!-- EA Office -->
-            <div id="eaOfficeAnchor" class="container-fluid py-3 d-none"></div>
-            <!-- EA Office End -->
-
-            <!-- Deer Stable -->
-            <div id="deerAnchor" class="container-fluid py-3 d-none"></div>
-            <!-- Deer Stable End -->
-
-            <!-- Flag -->
-            <div id="flagAnchor" class="container-fluid py-3 d-none"></div>
-            <!-- Flag End -->
-
-            <!-- Cases -->
-            <div id="cases-body" class="container-fluid my-2"></div>
-            <!-- Cases End -->
+              id="clock"
+              data-bs-toggle="tooltip"
+              data-bs-title="Time Remaining"
+              class="d-flex align-items-center justify-content-center mb-3 d-none"
+            >
+              <i class="fas fa-clock me-2 fa-lg"></i>
+              <h3 id="time" class="mb-0 fw-bold">00:00</h3>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div
+              id="passes"
+              class="d-flex align-items-center justify-content-center mb-3 d-none"
+            >
+              <i
+                class="fas fa-id-card me-2 fa-3x"
+                data-bs-toggle="tooltip"
+                data-bs-title="Passes give you Access"
+              ></i>
+              <img
+                id="ea-pass"
+                class="me-2 d-none"
+                src="images/EA ID card.png"
+                data-bs-toggle="tooltip"
+                data-bs-title="EA Pass: Access to EA Office, Deer Stable"
+                alt="EA Pass"
+              />
+              <img
+                id="santa-pass"
+                class="d-none"
+                src="images/Santa ID card.png"
+                data-bs-toggle="tooltip"
+                data-bs-title="Santa Pass: Access to Santa Office, Workshop"
+                alt="Santa Pass"
+              />
+            </div>
+          </div>
+          <div class="col-md-4 pb-3 mx-auto d-none" id="strikes">
+            <div
+              class="d-flex align-items-center justify-content-center"
+              data-bs-toggle="tooltip"
+              data-bs-title="Each wrong interaction will subtract 45s and give you 1 strike"
+            >
+              <h3 id="time" class="mb-0 fw-bold me-2">Strikes:</h3>
+              <i id="strike-1" class="fas fa-times me-2 fa-2x strike"></i>
+              <i id="strike-2" class="fas fa-times me-2 fa-2x strike"></i>
+              <i id="strike-3" class="fas fa-times me-2 fa-2x strike"></i>
+              <small>(<span id="strike-info">0</span>/3)</small>
+            </div>
           </div>
         </div>
       </div>
+      <!-- Header End -->
+
+      <!-- Home -->
+      <div id="homeAnchor" class="container-fluid py-3"></div>
+      <!-- Home End -->
+
+      <!-- Perimeter -->
+      <div id="perimeterAnchor" class="container-fluid py-3 d-none"></div>
+      <!-- Perimeter End -->
+
+      <!-- Compound -->
+      <div id="compoundAnchor" class="container-fluid py-3 d-none"></div>
+      <!-- Compound End -->
+
+      <!-- Santa Office -->
+      <div id="santaOfficeAnchor" class="container-fluid py-3 d-none"></div>
+      <!-- Santa Office End -->
+
+      <!-- Workshop -->
+      <div id="workshopAnchor" class="container-fluid py-3 d-none"></div>
+      <!-- Workshop End -->
+
+      <!-- EA Office -->
+      <div id="eaOfficeAnchor" class="container-fluid py-3 d-none"></div>
+      <!-- EA Office End -->
+
+      <!-- Deer Stable -->
+      <div id="deerAnchor" class="container-fluid py-3 d-none"></div>
+      <!-- Deer Stable End -->
+
+      <!-- Flag -->
+      <div id="flagAnchor" class="container-fluid py-3 d-none"></div>
+      <!-- Flag End -->
+
+      <!-- Cases -->
+      <div id="cases-body" class="container-fluid my-2"></div>
+      <!-- Cases End -->
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>

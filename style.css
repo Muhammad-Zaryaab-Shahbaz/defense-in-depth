@@ -23,9 +23,7 @@ body {
   color: white;
 }
 .game-body {
-  border-radius: 10px;
-  border: 1px solid #ececec;
-  min-height: calc(100vh - 50px);
+  min-height: 100vh;
   background-color: #212c42;
   overflow: auto;
 }
